@@ -1,9 +1,9 @@
-import React, {FunctionComponent, useEffect, useState} from 'react';
-import { View, Text } from 'react-native';
+
 import Api from "../../api/Api";
 import {Coupon} from "../../entities";
 import {CouponList} from "../../components/list";
-import {CouponCard} from "../../components/cards";
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { View } from 'react-native';
 
 /**
  * The react home page.
