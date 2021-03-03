@@ -1,40 +1,37 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
-import {Text, View } from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
+/* BaseCard Props
+*   bgColor:      the background color of the card (optional, white by default)
+*   rounded:      Optional, true if the card is rounded
+*   style:        The component style
+*   onClick       The component callback.
+ */
 export interface Props {
-  className?: string;
+  bgColor?: string
+  rounded?: boolean;
+  style?: Object;
   onClick?: () => void;
-  title: string;
 }
 
 /**
  * The react card component.
  */
-const BaseCard: FunctionComponent<Props> = ({ children, className, onClick, title}) => {
+const BaseCard: FunctionComponent<Props> = ({ children, style, bgColor = '#FFFFFF', rounded, onClick}) => {
 
-  const newTitle = title+'Salut';
-
-  const [value, setValue] = useState<string>(title);
-
-  //value = 'Salut' // FAUX
-  if(!value){
-    setValue('Salut'); // BON
-  }
-
-  useEffect(() => {
-    console.log('TITRE MODIFIE');
-  }, [title]);
+  const styles = StyleSheet.create({
+    card: {
+      backgroundColor: bgColor,
+      borderRadius: rounded ? 10 : 0,
+      padding: 20,
+      ...style
+    },
+  });
 
   return (
-    <View onClick={onClick}>
-      <Text>{newTitle}</Text>
+    <View onTouchEnd={onClick} style={styles.card}>
       {children}
     </View>);
 }
 
 export default BaseCard;
-
-/*<BaseCard>
-  <Text> Salut</Text> // -> Children
-</BaseCard>*/
-//<BaseCard onClick={() => lancerFonction()} />

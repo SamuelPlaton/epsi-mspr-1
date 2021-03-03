@@ -8,9 +8,9 @@ export default function App() {
   return (
     <NativeRouter>
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <BaseCard>
-          <Text>Hello there</Text>
+        <BaseCard bgColor={'#999999'} style={{backgroundColor: '#111111'}} rounded={true}>
+          <Text style={styles.text}>Hello there</Text>
+          <Text style={styles.text}>Hello there</Text>
         </BaseCard>
         <Router/>
       </View>
@@ -25,4 +25,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  text: {
+    backgroundColor: '#444444'
+  }
 });
