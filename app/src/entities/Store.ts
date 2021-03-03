@@ -1,4 +1,4 @@
-interface Store {
+export interface Store {
   id: string;
 
   attributes: {
@@ -7,7 +7,7 @@ interface Store {
   };
 
   relationships: {
-    user: Array<string>;
-    coupon: Array<string>;
+    users: string[];
+    coupons: string[];
   };
 }
