@@ -18,7 +18,6 @@ export interface Props {
  * The react card component.
  */
 const BaseCard: FunctionComponent<Props> = ({ children, style, bgColor = '#FFFFFF', rounded, onClick}) => {
-
   const styles = StyleSheet.create({
     card: {
       backgroundColor: bgColor,

@@ -1,0 +1,1 @@
+export { default as CouponInfo } from './coupon-info/CouponInfo';
