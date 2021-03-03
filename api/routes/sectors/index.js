@@ -1,1 +1,0 @@
-export { routes as getSectorRouter } from './get.js';

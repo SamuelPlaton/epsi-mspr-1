@@ -26,8 +26,8 @@ export const routes = express.Router();
  *            coupons:
  *              type: string
  *            example:
- *              stores
- *              coupons
+ *              stores: true
+ *              coupons: true
  *     responses:
  *      '200':
  *        description: User data is retrieved
@@ -35,7 +35,7 @@ export const routes = express.Router();
  *
  */
 routes.get('/users/:id', (request, response) => {
-  // Retrieve our Users, his sectors and services affiliated
+  // Retrieve our Users, his coupons and stores affiliated
   const includes = request.query;
   // Setup our default query and param
   const query = ['SELECT U.FIRSTNAME, U.LASTNAME, U.EMAIL, U.REGISTER_DATE, U.BIRTHDAY FROM USERS U WHERE U.ID = ?'];

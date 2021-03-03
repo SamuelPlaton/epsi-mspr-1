@@ -4,14 +4,14 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import dotenv from 'dotenv';
-import { getSectorRouter } from './routes/sectors/index.js';
-import { getServiceRouter, postServiceRouter, putServiceRouter } from './routes/services/index.js';
+import { getStoreRouter, putStoreRouter } from './routes/stores/index.js';
+import { getCouponRouter, postCouponRouter, putCouponRouter } from './routes/coupons/index.js';
 import { deleteUserRouter, getUserRouter, postUserRouter, putUserRouter } from './routes/users/index.js';
 
 // Enable .env config variables
 dotenv.config();
 // Setup our sql instance
-export const sqlInstance = new SQLInstance('localhost',3306, 'devmobile', 'epsi2021', 'troc');
+export const sqlInstance = new SQLInstance('localhost',3306, 'root', '', 'troc');
 sqlInstance.connect();
 
 // Define our swagger doc
@@ -34,12 +34,13 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-// Sector routes
-app.use('/', getSectorRouter);
-// Service routes
-app.use('/', getServiceRouter);
-app.use('/', postServiceRouter);
-app.use('/', putServiceRouter);
+// Store routes
+app.use('/', getStoreRouter);
+app.use('/', putStoreRouter);
+// Coupon routes
+app.use('/', getCouponRouter);
+app.use('/', postCouponRouter);
+app.use('/', putCouponRouter);
 // User routes
 app.use('/', postUserRouter);
 app.use('/', getUserRouter);
