@@ -1,19 +1,19 @@
-interface Coupon {
+export interface Coupon {
   id: string;
 
   attributes: {
-    start: number;
-    end: number;
-    offre: string;
+    start: Date;
+    end: Date;
+    offer: string;
     icon?: string;
-    description: string;
-    limite: number;
+    description?: string;
+    limit: number;
     unique: boolean;
     code: string;
   };
 
   relationships: {
-    user: Array<string>;
-    coupon: Array<string>;
+    users: string[];
+    stores: string[];
   };
 }

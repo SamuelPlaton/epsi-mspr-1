@@ -1,23 +1,4 @@
-interface User {
-  id: string;
-
-  attributes: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    token?: string;
-    birthDate: string;
-    phone?: number;
-  };
-
-  relationships: {
-    store: Array<string>;
-    coupon: Array<string>;
-    usercoupon: Array<UserCoupon>;
-  };
-}
-
-interface UserCoupon {
+export interface UserCoupon {
   id: string;
 
   attributes: {
@@ -26,7 +7,24 @@ interface UserCoupon {
   };
 
   relationships: {
-    user: Array<string>;
-    coupon: Array<string>;
+    user: string;
+    coupon: string;
+  };
+}
+
+export interface User {
+  id: string;
+
+  attributes: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    birthday: Date;
+    token?: string;
+  };
+
+  relationships: {
+    stores: string[];
+    coupon: UserCoupon[];
   };
 }
