@@ -25,7 +25,7 @@ app/project.xcworkspace
 # Android/IntelliJ
 #
 app/build/
-app/.idea
+.idea
 app/.gradle
 app/local.properties
 app/*.iml
@@ -33,6 +33,7 @@ app/*.iml
 # node.js
 #
 app/node_modules/
+node_modules/
 app/npm-debug.log
 app/yarn-error.log
 
@@ -62,3 +63,8 @@ app/ios/Pods/
 # Expo
 app/.expo/*
 app/web-build/
+
+# API
+api/.env
+api/package-lock.json
+api/node-modules/
