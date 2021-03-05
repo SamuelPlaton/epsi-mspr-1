@@ -1,29 +1,22 @@
 import React, { FunctionComponent } from 'react';
 import { View, Text, Button } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 /**
  * The react home page.
  */
 
-// const HomePage: FunctionComponent = () => {
-
-//   return (
-//     <View>
-//       <Text>Home Page</Text>
-//     </View>
-//   );
-// }
-
-function HomePage({ navigation }) {
+const HomePage:FunctionComponent = () => {
+  const nav = useNavigation();
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button
         title="Se connecter"
-        onPress={() => navigation.navigate('Login')}
+        onPress={() => nav.navigate('Login')}
       />
       <Button
         title="S'enregistrer"
-        onPress={() => navigation.navigate('Register')}
+        onPress={() => nav.navigate('Register')}
       />
     </View>
   );
