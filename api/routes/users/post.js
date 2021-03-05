@@ -63,7 +63,7 @@ routes.post('/users', async (request, response) => {
     return result.length > 0;
   });
   if(emailExist){
-    response.send('Email already exist');
+    response.send('-1');
     response.status(403).end();
     return;
   }
