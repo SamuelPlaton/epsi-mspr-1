@@ -3,11 +3,8 @@ import { LoginForm } from "../../components";
 
 const LoginPage:FunctionComponent = () => {
   return (
-    <LoginForm></LoginForm>
+    <LoginForm/>
   );
 }
-
-
-
 
 export default LoginPage;

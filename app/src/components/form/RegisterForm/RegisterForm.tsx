@@ -16,10 +16,10 @@ export default class Register extends Component {
 
     confirmPassord(password, confPassword) {
         if(this.state.password !== this.state.confPassword){
-            //TODO mettre un message
+          Alert.alert('Mauvais mot de passe');
         }else{
-            //TODO continuer
-            }
+            // Create user
+        }
     }
 
     onRegister() {

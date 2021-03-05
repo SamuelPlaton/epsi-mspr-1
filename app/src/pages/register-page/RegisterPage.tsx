@@ -3,7 +3,7 @@ import { RegisterForm } from "../../components";
 
 const RegisterPage:FunctionComponent = () => {
   return (
-    <RegisterForm></RegisterForm>
+    <RegisterForm/>
   );
 }
 

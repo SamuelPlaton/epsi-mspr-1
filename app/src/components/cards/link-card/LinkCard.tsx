@@ -3,6 +3,7 @@ import {BaseCard} from "../index";
 import {Image, ImageProps, StyleSheet, Text} from "react-native";
 import {Icon} from "react-native-elements";
 import {Images} from "../../../images";
+import {genericStyles} from "../../../styles";
 
 export interface Props {
   icon: ImageProps,
@@ -14,6 +15,7 @@ export interface Props {
  * The react coupon link component.
  */
 const LinkCard: FunctionComponent<Props> = ({icon, text, link}) => {
+
   const styles = StyleSheet.create({
     card: {
       padding: 10,
@@ -23,13 +25,7 @@ const LinkCard: FunctionComponent<Props> = ({icon, text, link}) => {
       width: '45%',
       height: 120
     },
-    iconLarge: {
-      width: 70,
-      height: 70,
-      marginLeft: 'auto',
-      marginRight: 'auto'
-    },
-    textLarge: {
+    text: {
       textAlign: "center",
       fontSize: 20
     }
@@ -41,8 +37,8 @@ const LinkCard: FunctionComponent<Props> = ({icon, text, link}) => {
   }
   return (
     <BaseCard bgColor='#FEFEFE' style={styles.card} onClick={redirect}>
-      <Image source={icon} style={styles.iconLarge}/>
-      <Text style={styles.textLarge}>{text}</Text>
+      <Image source={icon} style={genericStyles.iconLarge}/>
+      <Text style={styles.text}>{text}</Text>
     </BaseCard>);
 }
 
