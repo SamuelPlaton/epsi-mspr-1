@@ -1,10 +1,11 @@
 import React, {FunctionComponent, useState} from 'react';
 import {Alert, Button, Text, TextInput, View} from 'react-native';
-import DatePicker from 'react-native-date-picker'
+import { useNavigation } from '@react-navigation/native';
 import {genericStyles} from '../../../styles';
 import {NewUserData} from "../../../api/users/UsersApi";
 import Api from "../../../api/Api";
-import {Input} from "react-native-elements";
+import {storeActiveUser} from "../../../store/UserManager";
+import {User} from "../../../entities";
 
 
 /**
@@ -12,6 +13,7 @@ import {Input} from "react-native-elements";
  */
 
 const RegisterForm: FunctionComponent = () => {
+  const nav = useNavigation();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confPassword, setConfPassword] = useState<string>('');
@@ -35,9 +37,13 @@ const RegisterForm: FunctionComponent = () => {
       lastName: lastName,
       birthday: date,
     }
-    //await Api.UsersApi.get('1');
-    console.log('on va post !');
     const data = await Api.UsersApi.post(userData);
+    if(data === -1){
+      Alert.alert('Cet email est déjà pris');
+      return;
+    }
+    await storeActiveUser(data as User);
+    nav.navigate('Home', data);
   }
 
     return (

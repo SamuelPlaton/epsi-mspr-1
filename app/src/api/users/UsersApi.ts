@@ -25,8 +25,8 @@ export interface PasswordData {
 
 export const setUser = (user: Object): User => {
   return {id: user['id'], attributes: {
-      firstName: user['firstname'],
-      lastName: user['lastname'],
+      firstName: user['firstName'],
+      lastName: user['lastName'],
       email: user['email'],
       token: user['token'],
       registerDate: user['register_date'],
@@ -48,8 +48,12 @@ const UsersApi = {
     return response.data.map(user => setUser(user));
   }),
   post: (userData: NewUserData) => client.post('/users', {data: userData}).then(response => {
-    console.log(response.data);
-    return setUser(response.data);
+    if(response.data === -1){
+      return -1 // Email already exist
+    }else{
+      return setUser(response.data);
+    }
+
   }),
   login: (email: string, password: string) => client.post('/users/login', {data: { email, password }}).then(response => {
     console.log(response);
