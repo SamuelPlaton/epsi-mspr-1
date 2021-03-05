@@ -11,7 +11,7 @@ import { deleteUserRouter, getUserRouter, postUserRouter, putUserRouter } from '
 // Enable .env config variables
 dotenv.config();
 // Setup our sql instance
-export const sqlInstance = new SQLInstance('localhost',3306, 'root', '', 'troc');
+export const sqlInstance = new SQLInstance('localhost',3306, 'root', '', 'mspr');
 sqlInstance.connect();
 
 // Define our swagger doc

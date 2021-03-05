@@ -1,72 +1,112 @@
-import React, { Component } from 'react';
-import { Alert, View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { genericStyles } from '../../../styles';
+import React, {FunctionComponent, useState} from 'react';
+import {Alert, Button, Text, TextInput, View} from 'react-native';
+import DatePicker from 'react-native-date-picker'
+import {genericStyles} from '../../../styles';
+import {NewUserData} from "../../../api/users/UsersApi";
+import Api from "../../../api/Api";
+import {Input} from "react-native-elements";
 
 
 /**
- * Register page.
+ * Register form.
  */
 
-export default class Register extends Component {
-    state = {
-    email: '',
-    password: '',
-    confPassword: '',
-  };
+const RegisterForm: FunctionComponent = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confPassword, setConfPassword] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [day, setDay] = useState<number>(1);
+  const [month, setMonth] = useState<number>(1);
+  const [year, setYear] = useState<number>(2000);
 
-    confirmPassord(password, confPassword) {
-        if(this.state.password !== this.state.confPassword){
-          Alert.alert('Mauvais mot de passe');
-        }else{
-            // Create user
-        }
+  const onRegister = async() => {
+    if (password !== confPassword) {
+      Alert.alert('Les mots de passe ne sont pas les mêmes');
+      return;
     }
-
-    onRegister() {
-        const { email, password } = this.state;
-        Alert.alert('Informations', `email: ${email} + Mot de passe: ${password}`);
+    const date = new Date();
+    date.setFullYear(year, month, day);
+    const userData: NewUserData = {
+      email: email,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+      birthday: date,
     }
+    await Api.UsersApi.get('1');
+    //const data = await Api.UsersApi.post(userData);
+  }
 
-    render() {  
     return (
-        <View style={genericStyles.container}>
-        <Text style={genericStyles.titleText}>Créer un compte</Text>
-          <TextInput
-            value={this.state.email}
-            keyboardType = 'email-address'
-            onChangeText={(email) => this.setState({ email })}
-            placeholder='email'
-            placeholderTextColor = 'white'
-            style={genericStyles.input}
-          />
-          <TextInput
-            value={this.state.password}
-            onChangeText={(password) => this.setState({ password })}
-            placeholder={'Mot de passe'}
-            secureTextEntry={true}
-            placeholderTextColor = 'white'
-            style={genericStyles.input}
-          />
-
-            <TextInput
-            value={this.state.confPassword}
-            onChangeText={(confPassword) => this.setState({ confPassword })}
-            placeholder={'Confirmer mdp'}
-            secureTextEntry={true}
-            placeholderTextColor = 'white'
-            style={genericStyles.input}
-          />
-          
-       
-          <TouchableOpacity
-            style={genericStyles.button}
-            //TODO verif les champs avant submission
-            onPress={this.onRegister.bind(this)}
-         >
-           <Text style={genericStyles.buttonText}> Créer un compte </Text>
-         </TouchableOpacity>
-          
+      <View style={genericStyles.container}>
+        <Text style={genericStyles.titleText}>Bienvenue !</Text>
+        <Text style={genericStyles.label}>Entrez votre email</Text>
+        <TextInput
+          value={email}
+          keyboardType='email-address'
+          onChangeText={(value) => setEmail(value)}
+          placeholder='john.doe@email.com'
+          placeholderTextColor='#999999'
+          style={genericStyles.input}
+        />
+        <Text style={genericStyles.label}>Entrez votre mot de passe</Text>
+        <TextInput
+          value={password}
+          onChangeText={(value) => setPassword(value)}
+          placeholder='******'
+          secureTextEntry={true}
+          placeholderTextColor='#999999'
+          style={genericStyles.input}
+        />
+        <Text style={genericStyles.label}>Confirmez votre mot de passe</Text>
+        <TextInput
+          value={confPassword}
+          onChangeText={(value) => setConfPassword(value)}
+          placeholder='******'
+          secureTextEntry={true}
+          placeholderTextColor='#999999'
+          style={genericStyles.input}
+        />
+        <View style={{...genericStyles.rowBetween, width: '60%'}}>
+          <Text style={{...genericStyles.label, width: '40%'}}>Prénom</Text>
+          <Text style={{...genericStyles.label, width: '40%'}}>Nom</Text>
         </View>
-      );
-    }
+        <View style={{...genericStyles.rowBetween, width: '60%', marginBottom: 10}}>
+          <TextInput
+            value={firstName}
+            onChangeText={(value) => setFirstName(value)}
+            placeholder='John'
+            placeholderTextColor='#999999'
+            style={{...genericStyles.input, width: '40%'}}
+          />
+          <TextInput
+            value={lastName}
+            onChangeText={(value) => setLastName(value)}
+            placeholder='Doe'
+            placeholderTextColor='#999999'
+            style={{...genericStyles.input, width: '40%'}}
+          />
+        </View>
+        <Text style={{...genericStyles.label, width: '60%'}}>Date de naissance</Text>
+        <View style={{...genericStyles.rowBetween, width: '60%', marginBottom: 10}}>
+          <TextInput value={day.toString()}
+                     onChangeText={(value) => setDay(value.length > 0 ? parseInt(value) : 0)}
+                     style={{...genericStyles.input, width: '20%'}}
+                     keyboardType='number-pad'/>
+          <TextInput value={month.toString()}
+                     onChangeText={(value) => setMonth(value.length > 0 ? parseInt(value) : 0)}
+                     style={{...genericStyles.input, width: '20%'}}
+                     keyboardType='number-pad'/>
+          <TextInput value={year.toString()}
+                     onChangeText={(value) => setYear(value.length > 0 ? parseInt(value) : 0)}
+                     style={{...genericStyles.input, width: '40%'}}
+                     keyboardType='number-pad'/>
+        </View>
+        <Button title={'Créer mon compte'} onPress={onRegister} />
+      </View>
+    );
 }   
+
+export default RegisterForm;

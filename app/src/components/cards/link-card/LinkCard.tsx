@@ -1,8 +1,6 @@
 import React, {FunctionComponent} from 'react';
-import {BaseCard} from "../index";
+import {default as BaseCard} from "../base-card/BaseCard";
 import {Image, ImageProps, StyleSheet, Text} from "react-native";
-import {Icon} from "react-native-elements";
-import {Images} from "../../../images";
 import {genericStyles} from "../../../styles";
 
 export interface Props {
@@ -33,8 +31,8 @@ const LinkCard: FunctionComponent<Props> = ({icon, text, link}) => {
 
   const redirect = () => {
     console.log(link);
-
   }
+
   return (
     <BaseCard bgColor='#FEFEFE' style={styles.card} onClick={redirect}>
       <Image source={icon} style={genericStyles.iconLarge}/>

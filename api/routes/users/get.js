@@ -38,7 +38,7 @@ routes.get('/users/:id', (request, response) => {
   // Retrieve our Users, his coupons and stores affiliated
   const includes = request.query;
   // Setup our default query and param
-  const query = ['SELECT U.FIRSTNAME, U.LASTNAME, U.EMAIL, U.REGISTER_DATE, U.BIRTHDAY FROM USERS U WHERE U.ID = ?'];
+  const query = ['SELECT U.FIRSTNAME, U.LASTNAME, U.EMAIL, U.REGISTER_DATE, U.BIRTHDAY FROM USER U WHERE U.ID = ?'];
   const queryParams = [request.params.id];
   // Our queries index result
   const idx = [0, null, null];
@@ -106,7 +106,7 @@ routes.get('/users', (request, response) => {
     response.status(400).end();
     return;
   }
-  sqlInstance.request('SELECT ID, FIRSTNAME, LASTNAME, EMAIL, REGISTER_DATE, BIRTHDAY FROM USERS WHERE ID IN (?)', [ids.split(',')]).then(result => {
+  sqlInstance.request('SELECT ID, FIRSTNAME, LASTNAME, EMAIL, REGISTER_DATE, BIRTHDAY FROM USER WHERE ID IN (?)', [ids.split(',')]).then(result => {
     response.send(result);
   });
 });

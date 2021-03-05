@@ -61,7 +61,7 @@ routes.put('/users/:id', async (request, response) => {
   }
 
   // Check if email or phone already exist
-  const emailExist = await sqlInstance.request('SELECT * FROM USERS WHERE EMAIL = ? AND ID != ?', [email, request.params.id]).then(result => {
+  const emailExist = await sqlInstance.request('SELECT * FROM USER WHERE EMAIL = ? AND ID != ?', [email, request.params.id]).then(result => {
     return result.length > 0;
   });
   if(emailExist){
@@ -71,7 +71,7 @@ routes.put('/users/:id', async (request, response) => {
   }
 
   // Update our user
-  const sql = 'UPDATE USERS SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ? WHERE ID = ?';
+  const sql = 'UPDATE USER SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ? WHERE ID = ?';
   sqlInstance.request(sql,
     [
       firstName,
@@ -149,7 +149,7 @@ routes.put('/users/password/:id', async (request, response) => {
   const newToken = cryptoJS.AES.encrypt(newPassword, '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString();
 
   // Update our user
-  const sql = 'UPDATE USERS SET TOKEN = ? WHERE ID = ?';
+  const sql = 'UPDATE USER SET TOKEN = ? WHERE ID = ?';
   sqlInstance.request(sql,
       [
         newToken,
