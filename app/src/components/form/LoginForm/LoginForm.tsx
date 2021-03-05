@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Alert, View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { genericStyles } from '../../../styles';
 
