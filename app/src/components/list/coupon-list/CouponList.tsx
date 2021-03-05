@@ -15,9 +15,12 @@ export interface Props {
  */
 const CouponList: FunctionComponent<Props> = ({coupons}) => {
 
+  const handleCouponPopup = (coupon: Coupon) => {
+  }
+
   return (
     <View>
-      {coupons.map(coupon => <CouponCard coupon={coupon}/>)}
+      {coupons.map(coupon => <CouponCard coupon={coupon} key={coupon.id} onClick={handleCouponPopup}/>)}
     </View>
   );
 }

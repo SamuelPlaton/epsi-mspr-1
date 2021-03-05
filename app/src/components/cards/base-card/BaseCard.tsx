@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 
 /* BaseCard Props
 *   bgColor:      the background color of the card (optional, white by default)
@@ -23,13 +23,20 @@ const BaseCard: FunctionComponent<Props> = ({ children, style, bgColor = '#FFFFF
       backgroundColor: bgColor,
       borderRadius: rounded ? 10 : 0,
       padding: 20,
+      shadowColor: 'black',
+      shadowOpacity: 0.34,
+      shadowRadius: 4,
+      shadowOffset: {height: 3, width: 0},
+      elevation: 6,
       ...style
     },
   });
 
   return (
-    <View onTouchEnd={onClick} style={styles.card}>
+    <View  style={styles.card}>
+      <TouchableOpacity activeOpacity={1} onPress={onClick}>
       {children}
+      </TouchableOpacity>
     </View>);
 }
 

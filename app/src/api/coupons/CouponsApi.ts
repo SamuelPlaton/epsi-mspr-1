@@ -12,7 +12,6 @@ export interface ModifyCouponData {
   userId: string,
   userToken: string,
   couponId: string,
-  favored: number,
   used: number,
 }
 

@@ -6,15 +6,17 @@ import {StyleSheet} from "react-native";
 
 /* Coupon Card Props
 *   coupon: The coupon component
+*   onClick Callback when the card is clicked
  */
 export interface Props {
-  coupon: Coupon
+  coupon: Coupon,
+  onClick: (coupon: Coupon) => void;
 }
 
 /**
- * The react coupon info component.
+ * The react coupon card component.
  */
-const CouponCard: FunctionComponent<Props> = ({coupon}) => {
+const CouponCard: FunctionComponent<Props> = ({coupon, onClick}) => {
 
   const styles = StyleSheet.create({
     card: {
@@ -27,7 +29,7 @@ const CouponCard: FunctionComponent<Props> = ({coupon}) => {
   });
 
   return (
-    <BaseCard rounded bgColor='#EEEEEE' style={styles.card}>
+    <BaseCard bgColor='#FEFEFE' style={styles.card} onClick={() => onClick(coupon)}>
       <CouponInfo coupon={coupon}/>
     </BaseCard>);
 }
