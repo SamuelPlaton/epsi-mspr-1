@@ -4,10 +4,11 @@ export interface Coupon {
   attributes: {
     start: Date;
     end: Date;
+    title: string;
     offer: string;
     icon?: string;
     description?: string;
-    limit: number;
+    maxLimit: number;
     unique: boolean;
     code: string;
   };

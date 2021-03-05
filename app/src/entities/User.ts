@@ -3,7 +3,6 @@ export interface UserCoupon {
 
   attributes: {
     used: boolean;
-    favored: boolean;
   };
 
   relationships: {
@@ -21,10 +20,11 @@ export interface User {
     email: string;
     birthday: Date;
     token?: string;
+    registerDate?: string;
   };
 
   relationships: {
     stores: string[];
-    coupon: UserCoupon[];
+    coupons: UserCoupon[];
   };
 }
