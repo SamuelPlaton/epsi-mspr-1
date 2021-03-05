@@ -1,6 +1,6 @@
 import Api from "../../api/Api";
 import {Coupon} from "../../entities";
-import {CouponList} from "../../components/list";
+import {CouponList, LinkCard} from "../../components";
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { View } from 'react-native';
 
