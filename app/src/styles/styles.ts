@@ -5,11 +5,12 @@ const genericStyles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'grey',
+    justifyContent: 'flex-start',
   },
   titleText: {
-    fontSize: 50,
+    fontSize: 30,
+    marginBottom: 20,
+    marginTop: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -61,13 +62,18 @@ const genericStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    width: 200,
+    width: '60%',
     fontSize: 20,
     height: 44,
     padding: 10,
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: '#8CD3FF',
     marginVertical: 10,
+  },
+  label: {
+    width: '60%',
+    fontSize: 15,
+    color: '#8CD3FF',
   },
 });
 

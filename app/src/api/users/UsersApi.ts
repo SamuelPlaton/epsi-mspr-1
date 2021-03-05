@@ -41,14 +41,15 @@ export const setUser = (user: Object): User => {
 
 const UsersApi = {
   get: (id: string, includes?: Array<string>) => client.get(`/users/${id}`, setIncludes(includes)).then(response => {
+    console.log(response);
     return setUser(response.data);
   }),
   list: (ids: Array<string>) => client.get('/users', {data: ids}).then(response => {
     return response.data.map(user => setUser(user));
   }),
   post: (userData: NewUserData) => client.post('/users', {data: userData}).then(response => {
-    console.log(response);
-    return response;
+    console.log(response.data);
+    return setUser(response.data);
   }),
   login: (email: string, password: string) => client.post('/users/login', {data: { email, password }}).then(response => {
     console.log(response);

@@ -50,6 +50,7 @@ routes.post('/users', async (request, response) => {
   const {firstName, lastName, email, password, birthday} = request.body.data;
   const uuid = uuidv4();
 
+  console.log('posted');
   if (!firstName || !lastName || !email || !password || !birthday) {
     response.send('Bad parameters');
     response.status(400).end();
@@ -69,7 +70,7 @@ routes.post('/users', async (request, response) => {
   }
 
   // Insert our user
-  const sql = 'INSERT INTO USERS(ID, FIRSTNAME, LASTNAME, EMAIL, TOKEN, BIRTHDAY) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
+  const sql = 'INSERT INTO USER(ID, FIRSTNAME, LASTNAME, EMAIL, TOKEN, BIRTHDAY) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
   sqlInstance.request(sql,
     [uuid,
       firstName,

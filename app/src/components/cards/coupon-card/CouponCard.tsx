@@ -1,5 +1,5 @@
 import React, {FunctionComponent} from 'react';
-import {BaseCard} from "../index";
+import {default as BaseCard} from "../base-card/BaseCard";
 import {CouponInfo} from "../../info";
 import {Coupon} from "../../../entities";
 import {StyleSheet} from "react-native";
