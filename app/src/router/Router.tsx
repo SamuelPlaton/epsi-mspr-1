@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import { Route } from 'react-router-native';
 import { HomePage, LoginPage, RegisterPage } from '../pages';
 
 import { createStackNavigator } from '@react-navigation/stack';

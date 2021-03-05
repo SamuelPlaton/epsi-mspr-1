@@ -1,5 +1,5 @@
 import React, {FunctionComponent} from 'react';
-import {View, Text} from "react-native";
+import {View, Text, ScrollView} from "react-native";
 import {Coupon} from "../../../entities";
 import {CouponCard} from "../../cards";
 
@@ -24,6 +24,5 @@ const CouponList: FunctionComponent<Props> = ({coupons}) => {
     </View>
   );
 }
-//{coupons.map(coupon => <CouponCard coupon={coupon}/>)}
+
 export default CouponList;
-//<FlatList data={coupons} renderItem={(coupon: Coupon) => <CouponCard coupon={coupon}/>

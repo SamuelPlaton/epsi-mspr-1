@@ -38,15 +38,12 @@ export default class Login extends Component {
             placeholderTextColor = 'white'
             style={genericStyles.input}
           />
-          
-       
           <TouchableOpacity
             style={genericStyles.button}
             onPress={this.onLogin.bind(this)}
          >
            <Text style={genericStyles.buttonText}> Connexion </Text>
          </TouchableOpacity>
-          
         </View>
       );
     }

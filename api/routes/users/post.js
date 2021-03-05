@@ -77,7 +77,14 @@ routes.post('/users', async (request, response) => {
       email,
       token,
       birthday]).then(result => {
-    response.send(token);
+    response.send({
+      id: uuid,
+      token: token,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      birthday: birthday,
+    });
     response.status(201).end();
   });
 
@@ -124,12 +131,12 @@ routes.post('/users/login', async (request, response) => {
     return;
   }
   // Retrieve token if the email is found
-  const tokenResult = await sqlInstance.request("SELECT TOKEN FROM USERS WHERE EMAIL = ? LIMIT 1",
+  const userResult = await sqlInstance.request("SELECT * FROM USERS WHERE EMAIL = ? LIMIT 1",
     [email]).then(result => {
     return result;
   });
-  if (tokenResult.length === 0) {
-    response.send('Email not found');
+  if (userResult.length === 0) {
+    response.send('-1');
     response.status(403).end();
     return;
   }
@@ -138,13 +145,20 @@ routes.post('/users/login', async (request, response) => {
   const pwdToToken = cryptoJS.AES.encrypt(password, '22787802-a6e7-4c3d-8fc1-aab0ece1cb41');
   const pwd = cryptoJS.AES.decrypt(pwdToToken, '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString();
   // Decrypt DB Token
-  const tokenToPwd = cryptoJS.AES.decrypt(tokenResult[0]['TOKEN'], '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString();
+  const tokenToPwd = cryptoJS.AES.decrypt(userResult[0]['TOKEN'], '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString();
   // Handle connexion success or failure
   if(pwd === tokenToPwd){
-    response.send(tokenResult[0]);
+    response.send({
+      id: userResult[0]['ID'],
+      token: userResult[0]['TOKEN'],
+      firstName: userResult[0]['FIRSTNAME'],
+      lastName: userResult[0]['LASTNAME'],
+      email: userResult[0]['EMAIL'],
+      birthDay: userResult[0]['BIRTHDAY'],
+    });
     response.status(200).end();
   }else{
-    response.send('Wrong password');
+    response.send('-2');
     response.status(403).end();
   }
 });
