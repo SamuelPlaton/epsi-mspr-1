@@ -52,9 +52,9 @@ routes.delete('/users/:id', async (request, response) => {
 
   try {
     // Delete users_sectors
-    sqlInstance.request('DELETE FROM USER_STORE WHERE USER = ?', [request.params.id]);
+    await sqlInstance.request('DELETE FROM USER_STORE WHERE USER = ?', [request.params.id]);
     // Delete waiting services
-    sqlInstance.request('DELETE FROM USER_COUPON WHERE USER = ? AND USED = 0', [request.params.id]);
+    await sqlInstance.request('DELETE FROM USER_COUPON WHERE USER = ? AND USED = 0', [request.params.id]);
     // Delete user
     sqlInstance.request('DELETE FROM USER WHERE ID = ?', [request.params.id]).then(result => {
       response.send('User Deleted');

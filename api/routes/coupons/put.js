@@ -27,15 +27,12 @@ export const routes = express.Router();
  *              type: string
  *            couponId:
  *              type: string
- *            favored:
- *              type: string
  *            used:
  *              type: string
  *            example:
  *              userId: string
  *              userToken: string
- *              couponId: string
- *              favored: 1
+ *              userCouponId: string
  *              used: 1
  *     responses:
  *      '201':
@@ -46,10 +43,9 @@ export const routes = express.Router();
  *        description: Wrong token
  */
 routes.put('/coupons', async (request, response) => {
-    const {userId, userToken, couponId, favored, used} = request.body.data;
-    const uuid = uuidv4();
+    const {userId, userToken, userCouponId, used} = request.body.data;
     // Parameters check
-    if(!userId || !userToken || !couponId){
+    if(!userId || !userToken || !userCouponId || !used){
         response.send('Bad parameters');
         response.status(400).end();
         return;
@@ -63,14 +59,11 @@ routes.put('/coupons', async (request, response) => {
     }
 
     // Do insertion
-    const sql = "INSERT INTO USER_COUPON(ID, USER, COUPON, FAVORED, USED) VALUES(?, ?, ?, ?, ?)";
+    const sql = "UPDATE USER_COUPON SET USED = ? WHERE ID = ?";
     sqlInstance.request(sql,
-        [uuid,
-            userId,
-            couponId,
-            favored,
-            used]).then(result => {
-        response.send("");
+        [used,
+            userCouponId]).then(result => {
+        response.send('');
         response.status(201).end();
     });
 });

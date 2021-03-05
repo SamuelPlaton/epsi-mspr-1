@@ -22,39 +22,33 @@ export const routes = express.Router();
  *            properties:
  *            stores:
  *              type: string
- *            users:
- *              type: string
  *            example:
  *              stores: true
- *              coupons: true
  *     responses:
  *      '200':
  *        description: Coupon data is retrieved
  *
  *
  */
-routes.get('/coupons/:id', (request, response) => {
+routes.get('/coupons/:id', async (request, response) => {
     // Retrieve our Coupons, his users and stores affiliated
     const includes = request.query;
     // Setup our default query and param
     const query = ['SELECT * FROM COUPON C WHERE C.ID = ?'];
     const queryParams = [request.params.id];
     // Our queries index result
-    const idx = [0, null, null];
+    const idx = [0, null];
     let acc = 0;
+    const storesIds = await sqlInstance.request('SELECT STORE FROM COUPON_STORE WHERE COUPON = ?', [request.params.id]).then(response => {
+        return response.map(e => e['STORE']);
+    })
     // Everytime an include is settled, we increment the index result
     if(includes){
         if(includes.stores){
-            query.push('SELECT * FROM COUPON_STORE CS WHERE CS.COUPON = ?');
-            queryParams.push(request.params.id);
+            query.push('SELECT * FROM STORE S WHERE S.ID IN (?)');
+            queryParams.push(storesIds);
             acc += 1;
             idx[1] = acc;
-        }
-        if(includes.users){
-            query.push('SELECT * FROM USER_COUPON UC WHERE UC.COUPON = ?');
-            queryParams.push(request.params.id);
-            acc += 1;
-            idx[2] = acc;
         }
     }
     // Set our final query
@@ -62,7 +56,6 @@ routes.get('/coupons/:id', (request, response) => {
         response.send({
             coupon: result[idx[0]],
             stores : result[idx[1]],
-            users: result[idx[2]],
         });
     });
 });
@@ -109,3 +102,48 @@ routes.get('/coupons', (request, response) => {
         response.send(result);
     });
 });
+
+
+// Method GET of all selected coupons data
+/**
+ * @swagger
+ *
+ * /coupons/recommended/:idUser:
+ *   get:
+ *     tags:
+ *       - coupons
+ *     produces:
+ *       - application/json
+ *     summary:
+ *       - Get a list of coupons recommended from the database
+ *
+ *     responses:
+ *      '200':
+ *        description: Array of coupons
+ *      '400':
+ *        description: Bad parameters
+ *
+ *
+ */
+routes.get('/coupons/recommended/:idUser', async (request, response) => {
+
+    // Retrieve favorites stores of the user
+    const storeIds = await sqlInstance.request('SELECT STORE FROM USER_STORE WHERE USER = ?', [request.params.idUser]).then(response => {
+        return response.map(e => e['STORE']);
+    });
+
+    // Retrieve the coupons available in the selected stores
+    const couponIds = await sqlInstance.request('SELECT COUPON FROM COUPON_STORE WHERE STORE IN (?)', [storeIds]).then(response => {
+        return response.map(e => e['COUPON']);
+    });
+
+    // Retrieve the coupons already in user coupons and not used
+    const userCouponIds = await sqlInstance.request('SELECT COUPON FROM USER_COUPON WHERE USER = ? AND USED = 0', [request.params.idUser]).then(response => {
+        return response.map(e => e['COUPON']);
+    });
+
+    sqlInstance.request('SELECT * FROM COUPON WHERE ID IN (?) AND ID NOT IN (?)', [couponIds, userCouponIds]).then(result => {
+        response.send(result);
+    });
+});
+

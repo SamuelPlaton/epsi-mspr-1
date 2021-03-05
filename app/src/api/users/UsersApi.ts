@@ -41,7 +41,7 @@ export const setUser = (user: Object): User => {
 
 const UsersApi = {
   get: (id: string, includes?: Array<string>) => client.get(`/users/${id}`, setIncludes(includes)).then(response => {
-    console.log(response);
+    console.log(JSON.stringify(response.data));
     return setUser(response.data);
   }),
   list: (ids: Array<string>) => client.get('/users', {data: ids}).then(response => {
