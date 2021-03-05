@@ -35,8 +35,9 @@ const RegisterForm: FunctionComponent = () => {
       lastName: lastName,
       birthday: date,
     }
-    await Api.UsersApi.get('1');
-    //const data = await Api.UsersApi.post(userData);
+    //await Api.UsersApi.get('1');
+    console.log('on va post !');
+    const data = await Api.UsersApi.post(userData);
   }
 
     return (

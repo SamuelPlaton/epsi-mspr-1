@@ -20,7 +20,7 @@ export const routes = express.Router();
  *        description: Array of stores
  */
 routes.get('/stores', (request, response) => {
-    sqlInstance.request("SELECT * FROM STORES").then(result => {
+    sqlInstance.request("SELECT * FROM STORE").then(result => {
         response.send(result);
     });
 });
@@ -43,10 +43,10 @@ routes.get('/stores', (request, response) => {
  *          schema:
  *            type: object
  *            properties:
- *              stores:
+ *              ids:
  *                type: array
  *            example:
- *              stores: [1, 2, 3]
+ *              ids: [1, 2, 3]
  *
  *     responses:
  *      '200':
@@ -54,7 +54,7 @@ routes.get('/stores', (request, response) => {
  *
  */
 routes.get('/stores/selected', (request, response) => {
-    sqlInstance.request("SELECT * FROM STORES WHERE ID IN (?)", [request.query.sectors.split(',')]).then(result => {
+    sqlInstance.request("SELECT * FROM STORE WHERE ID IN (?)", [request.query.ids.split(',')]).then(result => {
         response.send(result);
     });
 });
@@ -78,7 +78,7 @@ routes.get('/stores/selected', (request, response) => {
  *
  */
 routes.get('/stores/:id', (request, response) => {
-    sqlInstance.request("SELECT * FROM STORES WHERE ID = ?", [request.params.id]).then(result => {
+    sqlInstance.request("SELECT * FROM STORE WHERE ID = ?", [request.params.id]).then(result => {
         response.send(result);
     });
 });

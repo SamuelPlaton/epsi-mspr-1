@@ -23,14 +23,14 @@ export const routes = express.Router();
  *            properties:
  *            stores:
  *              type: array
- *            token:
+ *            userToken:
  *              type: string
  *            userId:
  *              type: string
  *            example:
  *              userId: string
  *              stores: ["1", "2", "3"]
- *              token: string
+ *              userToken: string
  *     responses:
  *      '200':
  *        description: Updated
@@ -41,15 +41,15 @@ export const routes = express.Router();
  *
  */
 routes.put('/stores', async (request, response) => {
-    const {userId, stores, token} = request.body.data;
+    const {userId, stores, userToken} = request.body.data;
 
-    if (!stores || !token) {
+    if (!stores || !userToken) {
         response.send('Bad parameters');
         response.status(400).end();
         return;
     }
 
-    const properToken = await checkToken(token, userId);
+    const properToken = await checkToken(userToken, userId);
     if(!properToken){
         response.send('Wrong token');
         response.status(403).end();
@@ -61,7 +61,7 @@ routes.put('/stores', async (request, response) => {
 
     // add users sectors
     stores.map(store => {
-        sqlInstance.request('INSERT INTO USERS_STORE(USER, STORE) VALUES (?, ?)', [userId, store]);
+        sqlInstance.request('INSERT INTO USER_STORE(USER, STORE) VALUES (?, ?)', [userId, store]);
     });
     response.send('');
     response.status(200).end();
