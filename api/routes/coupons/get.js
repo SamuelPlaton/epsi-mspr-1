@@ -60,6 +60,31 @@ routes.get('/coupons/:id', async (request, response) => {
     });
 });
 
+// Method get of data of a coupon from his code
+/**
+ * @swagger
+ *
+ * /coupons/code/{id}:
+ *   get:
+ *     tags:
+ *       - coupons
+ *     produces:
+ *       - application/json
+ *     summary:
+ *       - Get all data from a coupon
+ *     responses:
+ *      '200':
+ *        description: Coupon data is retrieved
+ *
+ *
+ */
+routes.get('/coupons/code/:code', async (request, response) => {
+    sqlInstance.request('SELECT * FROM COUPON C WHERE C.CODE = ?', [request.params.code]).then(result => {
+        response.send(result);
+        response.status(200).end()
+    });
+});
+
 // Method GET of all selected coupons data
 /**
  * @swagger
