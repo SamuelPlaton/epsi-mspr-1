@@ -26,15 +26,18 @@ const HomePage: FunctionComponent = () => {
 
   const getData = async () => {
     //await AsyncStorage.removeItem('activeUser'); // Disconnect
+    if(!activeUser){
+      return;
+    }
+    // todo: set recommended coupons
     //const data = await Api.CouponsApi.listRecommended(activeUser.id);
-    //console.log(data);
     const retrievedCoupons: Array<Coupon> = await Api.CouponsApi.list(['1', '2']).then(response => response);
     setCoupons(retrievedCoupons);
   }
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [activeUser]);
 
 
   const styles = StyleSheet.create({
@@ -59,7 +62,7 @@ const HomePage: FunctionComponent = () => {
             <Text style={{...genericStyles.marginXAuto, ...styles.greetings}}>Salut {activeUser.attributes.firstName} {activeUser.attributes.lastName}</Text>
             <View style={{...genericStyles.rowBetween, ...styles.center}}>
               <LinkCard text='Scanner' icon={Images.qrCode} link='/qr-scanner'/>
-              <LinkCard text='Mes coupons' icon={Images.heart} link='/my-coupons'/>
+              <LinkCard text='Mes coupons' icon={Images.heart} link='Coupons'/>
             </View>
             <View style={{...genericStyles.rowBetween, ...styles.center}}>
               <LinkCard text='Etablissements' icon={Images.googleMaps} link='/establishments'/>

@@ -44,11 +44,12 @@ routes.get('/users/:id', async (request, response) => {
   const storesIds = await sqlInstance.request('SELECT STORE FROM USER_STORE WHERE USER = ?', [request.params.id]).then(response => {
     return response.map(e => e['STORE']);
   })
-
+  storesIds.push('X')
   const userCouponIds = await sqlInstance.request('SELECT COUPON FROM USER_COUPON WHERE USER = ?', [request.params.id]).then(response => {
     return response.map(e => e['COUPON']);
   });
 
+  userCouponIds.push('X');
   // Our queries index result
   const idx = [0, null, null, null];
   let acc = 0;

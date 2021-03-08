@@ -1,6 +1,7 @@
 import React, {FunctionComponent} from 'react';
 import {default as BaseCard} from "../base-card/BaseCard";
 import {Image, ImageProps, StyleSheet, Text} from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import {genericStyles} from "../../../styles";
 
 export interface Props {
@@ -14,6 +15,7 @@ export interface Props {
  */
 const LinkCard: FunctionComponent<Props> = ({icon, text, link}) => {
 
+  const nav = useNavigation();
   const styles = StyleSheet.create({
     card: {
       padding: 10,
@@ -30,7 +32,7 @@ const LinkCard: FunctionComponent<Props> = ({icon, text, link}) => {
   });
 
   const redirect = () => {
-    console.log(link);
+    nav.navigate(link)
   }
 
   return (
