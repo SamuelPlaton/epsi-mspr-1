@@ -40,9 +40,11 @@ export const setUser = (user: Object): User => {
 }
 
 const UsersApi = {
-  get: (id: string, includes?: Array<string>) => client.get(`/users/${id}`, setIncludes(includes)).then(response => {
-    console.log(JSON.stringify(response.data));
-    return setUser(response.data);
+  get: (id: string) => client.get(`/users/${id}?coupons=true`).then(response => {
+    console.log('Réponse :');
+    console.log(response.data);
+    //console.log(JSON.stringify(response.data));
+    //return setUser(response.data);
   }),
   list: (ids: Array<string>) => client.get('/users', {data: ids}).then(response => {
     return response.data.map(user => setUser(user));
@@ -56,7 +58,6 @@ const UsersApi = {
 
   }),
   login: (email: string, password: string) => client.post('/users/login', {data: { email, password }}).then(response => {
-    console.log(response.data);
     if(response.data === -1){
       return -1; // Wrong email
     }else if(response.data === -2){

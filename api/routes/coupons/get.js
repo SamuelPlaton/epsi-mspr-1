@@ -157,18 +157,21 @@ routes.get('/coupons/recommended/:idUser', async (request, response) => {
         return response.map(e => e['STORE']);
     });
 
+    // Add 'X' values so the ids are never empty, avoid an error when doing an 'IN (*empty*)' in SQL
+    storeIds.push('X');
     // Retrieve the coupons available in the selected stores
-    const couponIds = await sqlInstance.request('SELECT COUPON FROM COUPON_STORE WHERE STORE IN (?)', [storeIds.join(',')]).then(response => {
+    const couponIds = await sqlInstance.request('SELECT COUPON FROM COUPON_STORE WHERE STORE IN (?)', [storeIds]).then(response => {
         return response.map(e => e['COUPON']);
     });
 
-
+    couponIds.push('X');
     // Retrieve the coupons already in user coupons and not used
     const userCouponIds = await sqlInstance.request('SELECT COUPON FROM USER_COUPON WHERE USER = ? AND USED = 0', [request.params.idUser]).then(response => {
         return response.map(e => e['COUPON']);
     });
 
-    sqlInstance.request('SELECT * FROM COUPON WHERE ID IN (?) AND ID NOT IN (?)', [couponIds.join(','), userCouponIds.join(',')]).then(result => {
+    userCouponIds.push('X');
+    sqlInstance.request('SELECT * FROM COUPON WHERE ID IN (?) AND ID NOT IN (?)', [couponIds, userCouponIds]).then(result => {
         response.send(result);
     });
 });

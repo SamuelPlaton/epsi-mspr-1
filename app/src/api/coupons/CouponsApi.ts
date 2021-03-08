@@ -40,12 +40,11 @@ const CouponsApi = {
     return setCoupon(response.data.coupon);
   }),
   list: (ids: Array<string>) => client.get('/coupons', {params: { ids: ids.join(',')} }).then(response => {
-    console.log(response.data);
     return response.data.map(coupon => setCoupon(coupon));
   }),
   listRecommended: (idUser: string) => client.get(`/coupons/recommended/${idUser}`).then(response => {
-    console.log(response);
-    //return response.data.map(coupon => setCoupon(coupon));
+    console.log(response.data);
+    return response.data.map(coupon => setCoupon(coupon));
   }),
   post: (data: NewCouponData) => client.post('/coupons', {data: {...data} }).then(response => {
     return response;
