@@ -1,9 +1,12 @@
-import React, { FunctionComponent } from 'react';
-import { LoginForm } from "../../components";
+import React, {FunctionComponent} from 'react';
+import {LoginForm} from "../../components";
+import {ScrollView} from "react-native";
 
-const LoginPage:FunctionComponent = () => {
+const LoginPage: FunctionComponent = () => {
   return (
-    <LoginForm/>
+    <ScrollView>
+      <LoginForm/>
+    </ScrollView>
   );
 }
 

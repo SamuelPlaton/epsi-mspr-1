@@ -26,6 +26,8 @@ const HomePage: FunctionComponent = () => {
 
   const getData = async () => {
     //await AsyncStorage.removeItem('activeUser'); // Disconnect
+    //const data = await Api.CouponsApi.listRecommended(activeUser.id);
+    //console.log(data);
     const retrievedCoupons: Array<Coupon> = await Api.CouponsApi.list(['1', '2']).then(response => response);
     setCoupons(retrievedCoupons);
   }

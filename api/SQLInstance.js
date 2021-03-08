@@ -34,7 +34,7 @@ export default class SQLInstance{
         if (err) reject(err);
         resolve(result);
       });
-    })
+    }).catch(err => err);
   }
 
   // Close connection
