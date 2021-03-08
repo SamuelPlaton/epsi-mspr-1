@@ -154,7 +154,7 @@ routes.post('/users/login', async (request, response) => {
       firstName: userResult['firstname'],
       lastName: userResult['lastname'],
       email: userResult['email'],
-      birthDay: userResult['birthday'],
+      birthday: userResult['birthday'],
     });
     response.status(200).end();
   }else{

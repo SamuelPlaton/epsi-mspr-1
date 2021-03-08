@@ -1,50 +1,57 @@
-import React, { Component } from 'react';
-import { Alert, View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { FunctionComponent, useState} from 'react';
+import { Alert, View, Text, Button, TextInput } from 'react-native';
 import { genericStyles } from '../../../styles';
+import Api from "../../../api/Api";
+import {storeActiveUser} from "../../../store/UserManager";
+import {User} from "../../../entities";
+import {useNavigation} from "@react-navigation/native";
 
 /**
- * Login page.
+ * Login form.
  */
 
-export default class Login extends Component {
-    state = {
-    email: '',
-    password: '',
-  };
+const LoginForm: FunctionComponent = () => {
+  const nav = useNavigation();
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
-
-    onLogin() {
-        const { email, password } = this.state;
-        Alert.alert('Informations', `email: ${email} + Mot de passe: ${password}`);
+    const handleLogin = async () => {
+      const data = await Api.UsersApi.login(email, password);
+      if(data === -1){
+        Alert.alert(`Erreur dans l'email`);
+        return;
+      }else if(data === -2){
+        Alert.alert(`Erreur dans le mot de passe`);
+        return;
+      }
+      await storeActiveUser(data as User);
+      nav.navigate('Home', data);
     }
 
-    render() {  
     return (
         <View style={genericStyles.container}>
-        <Text style={genericStyles.titleText}>Se connecter</Text>
+          <Text style={genericStyles.titleText}>Connexion</Text>
+          <Text style={genericStyles.label}>Entrez votre email</Text>
           <TextInput
-            value={this.state.email}
+            value={email}
             keyboardType = 'email-address'
-            onChangeText={(email) => this.setState({ email })}
-            placeholder='email'
-            placeholderTextColor = 'white'
+            onChangeText={(value) => setEmail(value)}
+            placeholder='Email'
+            placeholderTextColor = '#999999'
             style={genericStyles.input}
           />
+          <Text style={genericStyles.label}>Entrez votre mot de passe</Text>
           <TextInput
-            value={this.state.password}
-            onChangeText={(password) => this.setState({ password })}
-            placeholder={'Mot de passe'}
+            value={password}
+            onChangeText={(value) => setPassword(value)}
+            placeholder={'******'}
             secureTextEntry={true}
-            placeholderTextColor = 'white'
+            placeholderTextColor = '#999999'
             style={genericStyles.input}
           />
-          <TouchableOpacity
-            style={genericStyles.button}
-            onPress={this.onLogin.bind(this)}
-         >
-           <Text style={genericStyles.buttonText}> Connexion </Text>
-         </TouchableOpacity>
+          <Button title={'Se connecter'} onPress={handleLogin} />
         </View>
       );
-    }
 }  
+
+export default LoginForm;

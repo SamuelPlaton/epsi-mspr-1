@@ -56,8 +56,16 @@ const UsersApi = {
 
   }),
   login: (email: string, password: string) => client.post('/users/login', {data: { email, password }}).then(response => {
-    console.log(response);
+    console.log(response.data);
+    if(response.data === -1){
+      return -1; // Wrong email
+    }else if(response.data === -2){
+      return -2; // Wrong password
+    }else{
+      return setUser(response.data);
+    }
   }),
+
   modify: (id: string, userData: ModifyUserData) => client.put(`/users/${id}`, {data: userData}).then(response => {
     console.log(response);
   }),
