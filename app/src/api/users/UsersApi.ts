@@ -1,6 +1,7 @@
 import { client } from '../client';
 import {setIncludes} from "../helpers";
-import {User} from "../../entities";
+import {User, UserCoupon} from "../../entities";
+import {setCoupon} from "../coupons/CouponsApi";
 
 export interface NewUserData {
   firstName: string,
@@ -39,12 +40,24 @@ export const setUser = (user: Object): User => {
   };
 }
 
+export const setUserCoupon = (uc: Object): UserCoupon => {
+  return {id: uc['id'], attributes: {
+      used: uc['used'],
+    },
+    relationships:{
+      user: uc['user'],
+      coupon: uc['coupon'],
+    }
+  };
+}
+
 const UsersApi = {
   get: (id: string) => client.get(`/users/${id}?coupons=true`).then(response => {
-    console.log('Réponse :');
-    console.log(response.data);
-    //console.log(JSON.stringify(response.data));
-    //return setUser(response.data);
+    return {
+      user: setUser(response.data.user[0]),
+      coupons: response.data.coupons.map(c => setCoupon(c)),
+      userCoupons: response.data.userCoupons.map(uc => setUserCoupon(uc)),
+    }
   }),
   list: (ids: Array<string>) => client.get('/users', {data: ids}).then(response => {
     return response.data.map(user => setUser(user));

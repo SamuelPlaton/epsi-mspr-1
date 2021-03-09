@@ -85,7 +85,7 @@ routes.post('/coupons', async (request, response) => {
         response.send({
             id: uuid,
             user: userId,
-            couponId: couponId,
+            coupon: couponId,
             used: 0
         });
         response.status(201).end();

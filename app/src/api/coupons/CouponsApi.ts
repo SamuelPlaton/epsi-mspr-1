@@ -1,6 +1,7 @@
 import { client } from '../client';
 import {setIncludes} from "../helpers";
 import {Coupon} from "../../entities";
+import {setUserCoupon} from "../users/UsersApi";
 
 export interface NewCouponData {
   userId: string,
@@ -43,11 +44,10 @@ const CouponsApi = {
     return response.data.map(coupon => setCoupon(coupon));
   }),
   listRecommended: (idUser: string) => client.get(`/coupons/recommended/${idUser}`).then(response => {
-    console.log(response.data);
     return response.data.map(coupon => setCoupon(coupon));
   }),
   post: (data: NewCouponData) => client.post('/coupons', {data: {...data} }).then(response => {
-    return response;
+    return setUserCoupon(response.data);
   }),
   put: (data: ModifyCouponData) => client.put('/stores', {data: {...data}}).then(response => {
     return response;

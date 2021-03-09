@@ -1,5 +1,5 @@
 import Api from "../../api/Api";
-import {Coupon, User} from "../../entities";
+import {Coupon, User, UserCoupon} from "../../entities";
 import {CouponList, LinkCard} from "../../components";
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
@@ -17,14 +17,20 @@ const CouponsPage: FunctionComponent = () => {
   const route = useRoute();
 
   const [coupons, setCoupons] = useState<Array<Coupon>>(undefined);
+  const [userCoupons, setUserCoupons] = useState<Array<UserCoupon>>(undefined);
   const [activeUser, setActiveUser] = useState<User | undefined>(undefined);
   retrieveActiveUser().then(response => {
     setActiveUser(response);
     return response
   });
-  // todo: handle data
+
   const getData = async () => {
-    await Api.UsersApi.get(activeUser.id);
+    if(!activeUser || coupons){
+      return;
+    }
+    const data = await Api.UsersApi.get(activeUser.id);
+    setCoupons(data.coupons);
+    setUserCoupons(data.userCoupons);
   }
 
   useEffect(() => {
@@ -47,7 +53,11 @@ const CouponsPage: FunctionComponent = () => {
 
   return (
     <ScrollView>
-      <Text>Salutt ca va oui</Text>
+      {( coupons && coupons.length > 0) ? (
+        <View>
+          <CouponList coupons={coupons}/>
+        </View>
+      ) : (<Text style={{...genericStyles.titleText, ...styles.center}}>Vous n'avez pas encore de coupons</Text>)}
     </ScrollView>
   );
 }

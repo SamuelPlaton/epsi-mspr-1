@@ -1,7 +1,7 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useState} from 'react';
 import {default as BaseCard} from "../base-card/BaseCard";
 import {CouponInfo} from "../../info";
-import {Coupon} from "../../../entities";
+import {Coupon, UserCoupon} from "../../../entities";
 import {StyleSheet} from "react-native";
 
 /* Coupon Card Props
@@ -11,13 +11,15 @@ import {StyleSheet} from "react-native";
 export interface Props {
   coupon: Coupon,
   onClick: (coupon: Coupon) => void;
+  userCoupon?: UserCoupon;
 }
 
 /**
  * The react coupon card component.
  */
-const CouponCard: FunctionComponent<Props> = ({coupon, onClick}) => {
+const CouponCard: FunctionComponent<Props> = ({coupon, onClick, userCoupon}) => {
 
+  const [syncedUserCoupon, setSyncedUserCoupon] = useState<UserCoupon|undefined>(userCoupon);
   const styles = StyleSheet.create({
     card: {
       padding: 5,
@@ -30,7 +32,7 @@ const CouponCard: FunctionComponent<Props> = ({coupon, onClick}) => {
 
   return (
     <BaseCard bgColor='#FEFEFE' style={styles.card} onClick={() => onClick(coupon)}>
-      <CouponInfo coupon={coupon}/>
+      <CouponInfo coupon={coupon} userCoupon={syncedUserCoupon} onUpdateUserCoupon={(uc) => setSyncedUserCoupon(uc)}/>
     </BaseCard>);
 }
 
