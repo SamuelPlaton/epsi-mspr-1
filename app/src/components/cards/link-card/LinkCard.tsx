@@ -27,7 +27,8 @@ const LinkCard: FunctionComponent<Props> = ({icon, text, link}) => {
     },
     text: {
       textAlign: "center",
-      fontSize: 20
+      fontSize: 15,
+      overflow: 'hidden',
     }
   });
 

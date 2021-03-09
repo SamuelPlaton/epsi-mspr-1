@@ -1,5 +1,7 @@
 const Images = {
   heart: require('../assets/icons/heart.png'),
+  heartFull: require('../assets/icons/heart-full.png'),
+  heartEmpty: require('../assets/icons/heart-empty.png'),
   trash: require('../assets/icons/trash.png'),
   add: require('../assets/icons/plus.png'),
   coupon: require('../assets/icons/coupon.png'),

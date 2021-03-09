@@ -42,7 +42,7 @@ routes.get('/coupons/:id', async (request, response) => {
     const storesIds = await sqlInstance.request('SELECT STORE FROM COUPON_STORE WHERE COUPON = ?', [request.params.id]).then(response => {
         return response.map(e => e['STORE']);
     });
-    stores.push('X');
+    storesIds.push('X');
     // Everytime an include is settled, we increment the index result
     if(includes){
         if(includes.stores){

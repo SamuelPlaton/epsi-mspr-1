@@ -26,12 +26,12 @@ const HomePage: FunctionComponent = () => {
 
   const getData = async () => {
     //await AsyncStorage.removeItem('activeUser'); // Disconnect
-    if(!activeUser){
+    if(!activeUser || coupons){
       return;
     }
     // todo: set recommended coupons
-    //const data = await Api.CouponsApi.listRecommended(activeUser.id);
-    const retrievedCoupons: Array<Coupon> = await Api.CouponsApi.list(['1', '2']).then(response => response);
+    const retrievedCoupons = await Api.CouponsApi.listRecommended(activeUser.id).then(response => response);
+    //const retrievedCoupons: Array<Coupon> = await Api.CouponsApi.list(['1', '2']).then(response => response);
     setCoupons(retrievedCoupons);
   }
 
@@ -59,7 +59,7 @@ const HomePage: FunctionComponent = () => {
     <ScrollView>
       {activeUser ? (
           <View>
-            <Text style={{...genericStyles.marginXAuto, ...styles.greetings}}>Salut {activeUser.attributes.firstName} {activeUser.attributes.lastName}</Text>
+            <Text style={{...genericStyles.marginXAuto, ...styles.greetings}}>Salut {activeUser.attributes.firstName} !</Text>
             <View style={{...genericStyles.rowBetween, ...styles.center}}>
               <LinkCard text='Scanner' icon={Images.qrCode} link='/qr-scanner'/>
               <LinkCard text='Mes coupons' icon={Images.heart} link='Coupons'/>
@@ -68,8 +68,13 @@ const HomePage: FunctionComponent = () => {
               <LinkCard text='Etablissements' icon={Images.googleMaps} link='/establishments'/>
               <LinkCard text='Commander' icon={Images.globe} link='https://google.com'/>
             </View>
-            <Text style={{...genericStyles.marginXAuto, ...styles.greetings}}> Les dernières offres ! </Text>
-            {coupons && <CouponList coupons={coupons}/>}
+            {(coupons && coupons.length > 0) ? (
+              <View>
+                <Text style={{...genericStyles.marginXAuto, ...styles.greetings}}> Les dernières offres ! </Text>
+                <CouponList coupons={coupons}/>
+              </View>
+            )
+            : (<Text>Pas de coupons</Text>)}
           </View>
         )
         :
@@ -85,7 +90,6 @@ const HomePage: FunctionComponent = () => {
           </View>
         )
       }
-
     </ScrollView>
   );
 }
