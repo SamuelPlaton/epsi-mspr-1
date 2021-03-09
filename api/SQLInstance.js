@@ -1,4 +1,7 @@
 import mysql from 'mysql';
+import fs from 'fs';
+import util from 'util';
+import moment from 'moment'
 
 export default class SQLInstance{
 
@@ -34,7 +37,11 @@ export default class SQLInstance{
         if (err) reject(err);
         resolve(result);
       });
-    }).catch(err => err);
+    }).catch(err => {
+        var log_file_err=fs.createWriteStream('./error.log',{flags:'a'});
+        log_file_err.write(util.format(moment(Date.now()).format('LTS')+' : Caught exception: '+err+' | '+err.sql) + '\n');
+        console.log(err);
+    })
   }
 
   // Close connection
