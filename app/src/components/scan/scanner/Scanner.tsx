@@ -1,10 +1,14 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
 import { Text, View, StyleSheet, Button, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { useNavigation } from '@react-navigation/native';
+import { Coupon } from '../../../entities';
+import Api from '../../../api/Api';
 
 const Scanner = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const nav = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -13,10 +17,17 @@ const Scanner = () => {
     })();
   }, []);
 
+  const getData = async (data: any) => {
+    const coupon: Coupon = await Api.CouponsApi.getByCode(data).then((response) => response);
+    console.log(coupon);
+    nav.navigate('CouponPage', coupon);
+  };
+
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    console.log('scan');
-    Alert.alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    console.log(data);
+    getData(data);
+    // Alert.alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
   if (hasPermission === null) {

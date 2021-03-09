@@ -1,1 +1,1 @@
-export { default as Scanner } from './camera/Scanner';
+export { default as Scanner } from './scanner/Scanner';
