@@ -27,11 +27,13 @@ const HomePage: FunctionComponent = () => {
     // If no active user, retrieve it
     if(!activeUser){
       retrieveActiveUser().then(response => {
-        setActiveUser(response);
+        if(response){
+          setActiveUser(response);
+        }
       });
     }
     // If no coupons, retrieve them else return
-    if(coupons){
+    if(!activeUser || coupons){
       return;
     }
     // retrieve recommended coupons
@@ -57,10 +59,6 @@ const HomePage: FunctionComponent = () => {
       fontSize: 20
     }
   });
-
-  useEffect(() => {
-    console.log('damn');
-  }, [activeUser])
 
   return (
     <ScrollView>

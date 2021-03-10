@@ -16,7 +16,7 @@ import {genericStyles} from "../../../styles";
 import {Images} from "../../../images";
 import Api from "../../../api/Api";
 import {retrieveActiveUser} from "../../../store/UserManager";
-import {NewCouponData} from "../../../api/coupons/CouponsApi";
+import {ModifyCouponData, NewCouponData} from "../../../api/coupons/CouponsApi";
 
 /* Coupon info Props
 *   coupon: The coupon component
@@ -33,7 +33,7 @@ export interface Props {
 const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userCoupon}) => {
   const {title, end, offer, code} = coupon.attributes;
   const date = moment(end).format('L');
-  const iconInteraction = userCoupon ? Images.heartFull : Images.heartEmpty;
+  const iconInteraction = (userCoupon && parseInt(userCoupon.attributes.favored) === 1) ? Images.heartFull : Images.heartEmpty;
 
   const styles = StyleSheet.create({
     title: {
@@ -60,10 +60,14 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
     e.stopPropagation();
     const activeUser = await retrieveActiveUser();
     if (userCoupon) {
-      //const data
-      //await Api.CouponsApi.delete(userCoupon.id, activeUser.id, activeUser.attributes.token);
-      //onUpdateUserCoupon(userCoupon, 'remove');
-      console.log('remove');
+      const data: ModifyCouponData = { couponId: coupon.id,
+        userId: activeUser.id,
+        userToken: activeUser.attributes.token,
+        userCouponId: userCoupon.id,
+        used: userCoupon.attributes.used.toString(),
+        favored: userCoupon.attributes.favored === "1" ? "0" : "1"}
+      const updatedUserCoupon = await Api.CouponsApi.put(data);
+      onUpdateUserCoupon(updatedUserCoupon, 'add');
     } else {
       const data: NewCouponData = { couponId: coupon.id, userId: activeUser.id, userToken: activeUser.attributes.token}
       const newUserCoupon = await Api.CouponsApi.post(data);

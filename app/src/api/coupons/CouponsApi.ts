@@ -13,8 +13,9 @@ export interface ModifyCouponData {
   userId: string,
   userToken: string,
   couponId: string,
-  used: number,
-  favored: number,
+  userCouponId: string,
+  used: string,
+  favored: string,
 }
 
 export const setCoupon = (coupon: Object): Coupon => {
@@ -45,18 +46,16 @@ const CouponsApi = {
     return response.data.map(coupon => setCoupon(coupon));
   }),
   listRecommended: (idUser: string) => client.get(`/coupons/recommended/${idUser}`).then(response => {
-    console.log(response);
     return {
       coupons : response.data.coupons.map(coupon => setCoupon(coupon)),
       userCoupons: response.data.userCoupons.map(uc => setUserCoupon(uc))
     };
   }),
   post: (data: NewCouponData) => client.post('/coupons', {data: {...data} }).then(response => {
-    console.log(response.data);
     return setUserCoupon(response.data);
   }),
   put: (data: ModifyCouponData) => client.put('/coupons', {data: {...data}}).then(response => {
-    return response;
+    return setUserCoupon(response.data);
   }),
 }
 
