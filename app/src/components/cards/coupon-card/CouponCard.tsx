@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useState} from 'react';
+import React, {FunctionComponent, useEffect, useState} from 'react';
 import {default as BaseCard} from "../base-card/BaseCard";
 import {CouponInfo} from "../../info";
 import {Coupon, UserCoupon} from "../../../entities";
@@ -20,6 +20,11 @@ export interface Props {
 const CouponCard: FunctionComponent<Props> = ({coupon, onClick, userCoupon}) => {
 
   const [syncedUserCoupon, setSyncedUserCoupon] = useState<UserCoupon|undefined>(userCoupon);
+
+  useEffect(() => {
+    setSyncedUserCoupon(userCoupon);
+  }, [userCoupon]);
+
   const styles = StyleSheet.create({
     card: {
       padding: 5,
@@ -30,9 +35,17 @@ const CouponCard: FunctionComponent<Props> = ({coupon, onClick, userCoupon}) => 
     }
   });
 
+  const handleUpdateUserCoupon = (uc: UserCoupon, action: string) => {
+    if(action === 'add'){
+      setSyncedUserCoupon(uc)
+    }else{
+      setSyncedUserCoupon(undefined);
+    }
+  }
+
   return (
     <BaseCard bgColor='#FEFEFE' style={styles.card} onClick={() => onClick(coupon)}>
-      <CouponInfo coupon={coupon} userCoupon={syncedUserCoupon} onUpdateUserCoupon={(uc) => setSyncedUserCoupon(uc)}/>
+      <CouponInfo coupon={coupon} userCoupon={syncedUserCoupon} onUpdateUserCoupon={handleUpdateUserCoupon}/>
     </BaseCard>);
 }
 

@@ -35,15 +35,15 @@ export const routes = express.Router();
  *        description: Unauthorized
  */
 routes.delete('/users/:id', async (request, response) => {
-  const { token } = request.body.data;
+  const data = request.body.data;
 
-  if (!request.body.data || !token) {
+  if (!data || !data.token) {
     response.status(400);
     response.send('-1').end();
     return;
   }
 
-  const properToken = await checkToken(token, request.params.id);
+  const properToken = await checkToken(data.token, request.params.id);
   if(!properToken){
     response.status(403);
     response.send('-2').end();

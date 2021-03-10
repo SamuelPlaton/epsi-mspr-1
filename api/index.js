@@ -5,7 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import dotenv from 'dotenv';
 import { getStoreRouter, putStoreRouter } from './routes/stores/index.js';
-import { deleteCouponRouter, getCouponRouter, postCouponRouter, putCouponRouter } from './routes/coupons/index.js';
+import { getCouponRouter, postCouponRouter, putCouponRouter } from './routes/coupons/index.js';
 import { deleteUserRouter, getUserRouter, postUserRouter, putUserRouter } from './routes/users/index.js';
 
 // Enable .env config variables
@@ -38,7 +38,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/', getStoreRouter);
 app.use('/', putStoreRouter);
 // Coupon routes
-app.use('/', deleteCouponRouter);
 app.use('/', getCouponRouter);
 app.use('/', postCouponRouter);
 app.use('/', putCouponRouter);
