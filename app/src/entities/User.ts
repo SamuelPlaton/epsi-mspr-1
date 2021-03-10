@@ -3,7 +3,7 @@ export interface UserCoupon {
 
   attributes: {
     used: number;
-    favored: number;
+    favored: string;
   };
 
   relationships: {

@@ -53,7 +53,7 @@ export const routes = express.Router();
 routes.put('/coupons', async (request, response) => {
     const data = request.body.data;
     // Parameters check
-    if( !data || !data.userId || !data.userToken || !data.userCouponId || !data.used || !data.favored){
+    if( !data || !data.userId || !data.userToken || !data.userCouponId || !data.couponId || !data.used || !data.favored){
         response.status(400);
         response.send('-1').end();
         return;
