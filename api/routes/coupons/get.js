@@ -81,8 +81,8 @@ routes.get('/coupons/:id', async (request, response) => {
  */
 routes.get('/coupons/code/:code', async (request, response) => {
     sqlInstance.request('SELECT * FROM COUPON C WHERE C.CODE = ?', [request.params.code]).then(result => {
-        response.send(result);
-        response.status(200).end()
+        response.status(200);
+        response.send(result).end();
     });
 });
 
@@ -120,8 +120,8 @@ routes.get('/coupons/code/:code', async (request, response) => {
 routes.get('/coupons', (request, response) => {
     const {ids} = request.query;
     if (!ids) {
-        response.send('Bad parameters');
-        response.status(400).end();
+        response.status(400);
+        response.send('-1').end();
         return;
     }
     sqlInstance.request('SELECT * FROM COUPON WHERE ID IN (?)', [ids.split(',')]).then(result => {
@@ -141,7 +141,7 @@ routes.get('/coupons', (request, response) => {
  *     produces:
  *       - application/json
  *     summary:
- *       - Get a list of coupons recommended from the database
+ *       - Get a list of coupons recommended from the database with the userCoupons affiliated
  *
  *     responses:
  *      '200':
@@ -167,13 +167,21 @@ routes.get('/coupons/recommended/:idUser', async (request, response) => {
 
     couponIds.push('X');
     // Retrieve the coupons already in user coupons and not used
-    const userCouponIds = await sqlInstance.request('SELECT COUPON FROM USER_COUPON WHERE USER = ? AND USED = 0', [request.params.idUser]).then(response => {
+    const userCouponIds = await sqlInstance.request('SELECT COUPON FROM USER_COUPON WHERE USER = ? AND USED = 1', [request.params.idUser]).then(response => {
         return response.map(e => e['COUPON']);
     });
 
+    // Retrieve user affiliated coupons
+    const userCoupons = await sqlInstance.request('SELECT * FROM USER_COUPON WHERE USER = ? AND USED = 0', [request.params.idUser]).then(response => {
+        return response;
+    });
+
     userCouponIds.push('X');
-    sqlInstance.request('SELECT * FROM COUPON WHERE ID IN (?) AND ID NOT IN (?)', [couponIds, userCouponIds]).then(result => {
-        response.send(result);
+    sqlInstance.request('SELECT * FROM COUPON WHERE ID IN (?) AND `VALID` = 1', [couponIds]).then(result => {
+        response.send({
+            coupons: result.filter(res => !(userCouponIds.includes(res['id']) && res['unique'] === 1)),
+            userCoupons: userCoupons
+        });
     });
 });
 

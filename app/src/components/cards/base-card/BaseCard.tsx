@@ -1,5 +1,5 @@
-import React, {FunctionComponent, useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
+import React, {FunctionComponent} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 /* BaseCard Props
 *   bgColor:      the background color of the card (optional, white by default)

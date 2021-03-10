@@ -50,9 +50,9 @@ routes.post('/users', async (request, response) => {
     const {firstName, lastName, email, password, birthday} = request.body.data;
     const uuid = uuidv4();
 
-    if (!firstName || !lastName || !email || !password || !birthday) {
-        response.send('Bad parameters');
-        response.status(400).end();
+    if (!request.body.data || !firstName || !lastName || !email || !password || !birthday) {
+        response.status(400);
+        response.send('-1').end();
         return;
     }
     // Crypt password
@@ -63,8 +63,8 @@ routes.post('/users', async (request, response) => {
         return result.length > 0;
     });
     if (emailExist) {
-        response.send('-1');
-        response.status(403).end();
+        response.status(403);
+        response.send('-20').end();
         return;
     }
 
@@ -80,6 +80,7 @@ routes.post('/users', async (request, response) => {
 
     // Affiliate user to internet store
     await sqlInstance.request('INSERT INTO USER_STORE(USER, STORE) VALUES(?, ?)', [uuid, '1']).then(result => {
+        response.status(201);
         response.send({
             id: uuid,
             token: token,
@@ -87,8 +88,7 @@ routes.post('/users', async (request, response) => {
             lastName: lastName,
             email: email,
             birthday: birthday,
-        });
-        response.status(201).end();
+        }).end();
     });
 });
 
@@ -127,8 +127,8 @@ routes.post('/users', async (request, response) => {
  */
 routes.post('/users/login', async (request, response) => {
     const {email, password} = request.body.data;
-    if (!email || !password) {
-        response.send('Bad parameters');
+    if (!request.body.data || !email || !password) {
+        response.send('-1');
         response.status(400).end();
         return;
     }
@@ -138,7 +138,7 @@ routes.post('/users/login', async (request, response) => {
         return result[0];
     });
     if (!userResult) {
-        response.send('-1');
+        response.send('-21');
         response.status(403).end();
         return;
     }
@@ -150,6 +150,7 @@ routes.post('/users/login', async (request, response) => {
     const tokenToPwd = cryptoJS.AES.decrypt(userResult['token'], '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString();
     // Handle connexion success or failure
     if (pwd === tokenToPwd) {
+        response.status(200);
         response.send({
             id: userResult['id'],
             token: userResult['token'],
@@ -157,10 +158,9 @@ routes.post('/users/login', async (request, response) => {
             lastName: userResult['lastname'],
             email: userResult['email'],
             birthday: userResult['birthday'],
-        });
-        response.status(200).end();
+        }).end();
     } else {
-        response.send('-2');
-        response.status(403).end();
+        response.status(403);
+        response.send('-22').end();
     }
 });

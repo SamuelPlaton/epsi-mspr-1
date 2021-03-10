@@ -33,6 +33,7 @@ export const routes = express.Router();
  *              userId: string
  *              userToken: string
  *              userCouponId: string
+ *              couponId: string
  *              used: 1
  *     responses:
  *      '201':
@@ -43,18 +44,18 @@ export const routes = express.Router();
  *        description: Wrong token
  */
 routes.put('/coupons', async (request, response) => {
-    const {userId, userToken, userCouponId, used} = request.body.data;
+    const {userId, userToken, userCouponId, used, couponId} = request.body.data;
     // Parameters check
-    if(!userId || !userToken || !userCouponId || !used){
-        response.send('Bad parameters');
-        response.status(400).end();
+    if( !request.body.data || !userId || !userToken || !userCouponId || !used){
+        response.status(400);
+        response.send('-1').end();
         return;
     }
     // Token check
     const properToken = await checkToken(userToken, userId);
     if(!properToken){
-        response.send('Wrong token');
-        response.status(403).end();
+        response.status(403);
+        response.send('-2').end();
         return;
     }
 
@@ -63,7 +64,12 @@ routes.put('/coupons', async (request, response) => {
     sqlInstance.request(sql,
         [used,
             userCouponId]).then(result => {
-        response.send('');
-        response.status(201).end();
+        response.status(201);
+        response.send({
+            id: userCouponId,
+            user: userId,
+            coupon: couponId,
+            used: used
+        }).end();
     });
 });

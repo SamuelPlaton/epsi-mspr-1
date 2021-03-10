@@ -47,16 +47,16 @@ export const routes = express.Router();
  */
 routes.put('/users/:id', async (request, response) => {
   const {firstName, lastName, email, token} = request.body.data;
-  if (!firstName || !lastName || !email || !token) {
-    response.send('Bad parameters');
-    response.status(400).end();
+  if ( !request.body.data || !firstName || !lastName || !email || !token) {
+    response.status(400);
+    response.send('-1').end();
     return;
   }
 
   const properToken = await checkToken(token, request.params.id);
   if(!properToken){
-    response.send('Wrong token');
-    response.status(403).end();
+    response.status(403);
+    response.send('-2').end();
     return;
   }
 
@@ -65,8 +65,8 @@ routes.put('/users/:id', async (request, response) => {
     return result.length > 0;
   });
   if(emailExist){
-    response.send('Email already exist');
-    response.status(403).end();
+    response.status(403);
+    response.send('-20').end();
     return;
   }
 
@@ -78,8 +78,14 @@ routes.put('/users/:id', async (request, response) => {
       lastName,
       email,
       request.params.id]).then(result => {
-    response.send('');
-    response.status(200).end();
+    response.status(200);
+    response.send({
+      id: request.params.id,
+      firstName: firstName,
+      lastName: lastName,
+      token: token,
+      email: email
+    }).end();
   });
 });
 
@@ -121,16 +127,16 @@ routes.put('/users/:id', async (request, response) => {
  */
 routes.put('/users/password/:id', async (request, response) => {
   const {previousPassword, newPassword, token} = request.body.data;
-  if (!previousPassword || !newPassword || !token) {
-    response.send('Bad parameters');
-    response.status(400).end();
+  if ( !request.body.data || !previousPassword || !newPassword || !token) {
+    response.status(400);
+    response.send('-1').end();
     return;
   }
 
   const properToken = await checkToken(token, request.params.id);
   if(!properToken){
-    response.send('Wrong token');
-    response.status(403).end();
+    response.status(403);
+    response.send('-2').end();
     return;
   }
 
@@ -141,8 +147,8 @@ routes.put('/users/password/:id', async (request, response) => {
   const tokenToPwd = cryptoJS.AES.decrypt(token, '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString();
 
   if(pwd !== tokenToPwd){
-    response.send('Wrong previous password');
-    response.status(403).end();
+    response.status(403);
+    response.send('-23').end();
     return;
   }
   // Crypt new password
@@ -154,7 +160,7 @@ routes.put('/users/password/:id', async (request, response) => {
       [
         newToken,
         request.params.id]).then(result => {
-    response.send(newToken);
-    response.status(200).end();
+    response.status(200);
+    response.send(newToken).end();
   });
 });

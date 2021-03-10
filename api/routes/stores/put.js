@@ -43,16 +43,16 @@ export const routes = express.Router();
 routes.put('/stores', async (request, response) => {
     const {userId, stores, userToken} = request.body.data;
 
-    if (!stores || !userToken) {
-        response.send('Bad parameters');
-        response.status(400).end();
+    if (!request.body.data || !stores || !userId ||  !userToken) {
+        response.status(400);
+        response.send('-1').end();
         return;
     }
 
     const properToken = await checkToken(userToken, userId);
     if(!properToken){
-        response.send('Wrong token');
-        response.status(403).end();
+        response.status(403);
+        response.send('-2').end();
         return;
     }
 
@@ -63,6 +63,8 @@ routes.put('/stores', async (request, response) => {
     stores.map(store => {
         sqlInstance.request('INSERT INTO USER_STORE(USER, STORE) VALUES (?, ?)', [userId, store]);
     });
-    response.send('');
-    response.status(200).end();
+    response.status(200);
+    response.send(stores.map(store => {
+        return {user: userId, store: store}
+    })).end();
 });
