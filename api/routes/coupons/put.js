@@ -41,7 +41,7 @@ export const routes = express.Router();
  *              couponId: string
  *              favored: 1
  *              used: 1
- *              action: "use" (optional)
+ *              action: use (optional)
  *     responses:
  *      '201':
  *        description: Updated
