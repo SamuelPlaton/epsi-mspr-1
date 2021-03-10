@@ -24,7 +24,7 @@ import {NewCouponData} from "../../../api/coupons/CouponsApi";
 export interface Props {
   coupon: Coupon;
   userCoupon?: UserCoupon;
-  onUpdateUserCoupon: (uc: UserCoupon) => void;
+  onUpdateUserCoupon: (uc: UserCoupon, action: string) => void;
 }
 
 /**
@@ -35,9 +35,6 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
   const date = moment(end).format('L');
   const iconInteraction = userCoupon ? Images.heartFull : Images.heartEmpty;
 
-  useEffect(() => {
-
-  })
   const styles = StyleSheet.create({
     title: {
       fontSize: 20,
@@ -64,11 +61,13 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
     const activeUser = await retrieveActiveUser();
     if (userCoupon) {
       //const data
-      //await Api.CouponsApi.post()
+      //await Api.CouponsApi.delete(userCoupon.id, activeUser.id, activeUser.attributes.token);
+      //onUpdateUserCoupon(userCoupon, 'remove');
+      console.log('remove');
     } else {
       const data: NewCouponData = { couponId: coupon.id, userId: activeUser.id, userToken: activeUser.attributes.token}
       const newUserCoupon = await Api.CouponsApi.post(data);
-      onUpdateUserCoupon(newUserCoupon);
+      onUpdateUserCoupon(newUserCoupon, 'add');
     }
   }
   const copyCode = (e: GestureResponderEvent) => {

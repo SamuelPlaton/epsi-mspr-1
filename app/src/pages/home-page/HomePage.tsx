@@ -1,5 +1,5 @@
 import Api from "../../api/Api";
-import {Coupon, User} from "../../entities";
+import {Coupon, User, UserCoupon} from "../../entities";
 import {CouponList, LinkCard} from "../../components";
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
@@ -18,27 +18,31 @@ const HomePage: FunctionComponent = () => {
   const route = useRoute();
 
   const [coupons, setCoupons] = useState<Array<Coupon>>(undefined);
+  const [userCoupons, setUserCoupons] = useState<Array<UserCoupon>>(undefined);
   // Retrieve our active user
   const [activeUser, setActiveUser] = useState<User | undefined>(route.params ? route.params as User : undefined);
-  retrieveActiveUser().then(response => {
-    setActiveUser(response);
-  })
 
   const getData = async () => {
     //await AsyncStorage.removeItem('activeUser'); // Disconnect
-    if(!activeUser || coupons){
+    // If no active user, retrieve it
+    if(!activeUser){
+      retrieveActiveUser().then(response => {
+        setActiveUser(response);
+      });
+    }
+    // If no coupons, retrieve them else return
+    if(coupons){
       return;
     }
-    // todo: set recommended coupons
+    // retrieve recommended coupons
     const retrievedCoupons = await Api.CouponsApi.listRecommended(activeUser.id).then(response => response);
-    //const retrievedCoupons: Array<Coupon> = await Api.CouponsApi.list(['1', '2']).then(response => response);
-    setCoupons(retrievedCoupons);
+    setCoupons(retrievedCoupons.coupons);
+    setUserCoupons(retrievedCoupons.userCoupons);
   }
 
   useEffect(() => {
     getData();
   }, [activeUser]);
-
 
   const styles = StyleSheet.create({
     center: {
@@ -54,6 +58,9 @@ const HomePage: FunctionComponent = () => {
     }
   });
 
+  useEffect(() => {
+    console.log('damn');
+  }, [activeUser])
 
   return (
     <ScrollView>
@@ -71,10 +78,10 @@ const HomePage: FunctionComponent = () => {
             {(coupons && coupons.length > 0) ? (
               <View>
                 <Text style={{...genericStyles.marginXAuto, ...styles.greetings}}> Les dernières offres ! </Text>
-                <CouponList coupons={coupons}/>
+                <CouponList coupons={coupons} userCoupons={userCoupons}/>
               </View>
             )
-            : (<Text>Pas de coupons</Text>)}
+            : (<Text style={{...genericStyles.marginXAuto, ...styles.greetings}}>Désolé, il n'y a pas de coupon disponible pour le moment.</Text>)}
           </View>
         )
         :

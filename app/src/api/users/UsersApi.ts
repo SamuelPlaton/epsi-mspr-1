@@ -43,6 +43,7 @@ export const setUser = (user: Object): User => {
 export const setUserCoupon = (uc: Object): UserCoupon => {
   return {id: uc['id'], attributes: {
       used: uc['used'],
+      favored: uc['favored']
     },
     relationships:{
       user: uc['user'],
