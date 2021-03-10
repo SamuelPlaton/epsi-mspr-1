@@ -63,7 +63,7 @@ const UsersApi = {
     return response.data.map(user => setUser(user));
   }),
   post: (userData: NewUserData) => client.post('/users', {data: userData}).then(response => {
-    if(response.data === -1){
+    if(response.data === -20){
       return -1 // Email already exist
     }else{
       return setUser(response.data);
@@ -71,9 +71,9 @@ const UsersApi = {
 
   }),
   login: (email: string, password: string) => client.post('/users/login', {data: { email, password }}).then(response => {
-    if(response.data === -1){
+    if(response.data === -21){
       return -1; // Wrong email
-    }else if(response.data === -2){
+    }else if(response.data === -22){
       return -2; // Wrong password
     }else{
       return setUser(response.data);

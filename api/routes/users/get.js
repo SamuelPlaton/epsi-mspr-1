@@ -44,7 +44,7 @@ routes.get('/users/:id', async (request, response) => {
   const storesIds = await sqlInstance.request('SELECT STORE FROM USER_STORE WHERE USER = ?', [request.params.id]).then(response => {
     return response.map(e => e['STORE']);
   })
-  storesIds.push('X')
+  storesIds.push('X');
   const userCouponIds = await sqlInstance.request('SELECT COUPON FROM USER_COUPON WHERE USER = ?', [request.params.id]).then(response => {
     return response.map(e => e['COUPON']);
   });
@@ -117,8 +117,8 @@ routes.get('/users/:id', async (request, response) => {
 routes.get('/users', (request, response) => {
   const {ids} = request.query;
   if (!ids) {
-    response.send('Bad parameters');
-    response.status(400).end();
+    response.status(400);
+    response.send('-1').end();
     return;
   }
   sqlInstance.request('SELECT id, firstName, lastName, email, register_date, birthday FROM USER WHERE ID IN (?)', [ids.split(',')]).then(result => {
