@@ -63,8 +63,8 @@ routes.post('/coupons', async (request, response) => {
         return result.length > 0;
     });
     if (!couponValid) {
-        response.send('-10'); // Invalid coupon
-        response.status(403).end();
+        response.status(403);
+        response.send('-10').end(); // Invalid coupon
         return;
     }
     const uniqueCoupon = await checkUniqueCoupon(couponId);
