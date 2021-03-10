@@ -29,7 +29,12 @@ const CouponsPage: FunctionComponent = () => {
       return;
     }
     const data = await Api.UsersApi.get(activeUser.id);
-    setCoupons(data.coupons);
+    const favoredCoupons = data.coupons.filter(c => {
+      const userCoupon = data.userCoupons.find(uc => uc.relationships.coupon === c.id);
+      const uniqueStatement = c.attributes.unique === 0 || (c.attributes.unique === 1 && userCoupon && parseInt(userCoupon.attributes.used) === 0);
+      return userCoupon && parseInt(userCoupon.attributes.favored) === 1 && c.attributes.valid === 1 && uniqueStatement
+    });
+    setCoupons(favoredCoupons);
     setUserCoupons(data.userCoupons);
   }
 
@@ -42,12 +47,6 @@ const CouponsPage: FunctionComponent = () => {
       width: '85%',
       marginLeft: 'auto',
       marginRight: 'auto'
-    },
-    greetings: {
-      width: '80%',
-      marginTop: 10,
-      marginBottom: 10,
-      fontSize: 20
     }
   });
 
@@ -55,7 +54,8 @@ const CouponsPage: FunctionComponent = () => {
     <ScrollView>
       {( coupons && coupons.length > 0) ? (
         <View>
-          <CouponList coupons={coupons}/>
+          <Text style={{...genericStyles.subtitleText, ...genericStyles.marginXAuto}}> Mes Coupons ({coupons.length})</Text>
+          <CouponList coupons={coupons} userCoupons={userCoupons}/>
         </View>
       ) : (<Text style={{...genericStyles.titleText, ...styles.center}}>Vous n'avez pas encore de coupons</Text>)}
     </ScrollView>

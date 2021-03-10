@@ -11,6 +11,7 @@ export interface Coupon {
     maxLimit: number;
     unique: boolean;
     code: string;
+    valid: number;
   };
 
   relationships: {
