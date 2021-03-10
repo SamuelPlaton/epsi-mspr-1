@@ -1,14 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { Text } from 'react-native';
 import { CouponCard } from '../../components';
+import { Coupon } from '../../entities';
 
 const CouponPage: FunctionComponent = () => {
   const coupon = useRoute().params;
-  console.log('pages coupons');
-  console.log(coupon);
+  const handleCouponPopup = (coupon: Coupon) => {};
 
-  return <CouponCard coupon={coupon} key={coupon.id} />;
+  return <CouponCard coupon={coupon} onClick={handleCouponPopup} />;
 };
 
 export default CouponPage;
