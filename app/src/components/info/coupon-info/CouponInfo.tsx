@@ -1,5 +1,6 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import moment from 'moment';
+import 'moment/locale/fr';
 import {
   Button,
   Clipboard,
@@ -32,7 +33,7 @@ export interface Props {
  */
 const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userCoupon}) => {
   const {title, end, offer, code} = coupon.attributes;
-  const date = moment(end).format('L');
+  const date = moment(end).locale('fr').format('L');
   const iconInteraction = (userCoupon && parseInt(userCoupon.attributes.favored) === 1) ? Images.heartFull : Images.heartEmpty;
 
   const styles = StyleSheet.create({

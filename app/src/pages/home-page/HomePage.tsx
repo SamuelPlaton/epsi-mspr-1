@@ -51,12 +51,6 @@ const HomePage: FunctionComponent = () => {
       width: '85%',
       marginLeft: 'auto',
       marginRight: 'auto'
-    },
-    greetings: {
-      width: '80%',
-      marginTop: 10,
-      marginBottom: 10,
-      fontSize: 20
     }
   });
 
@@ -64,7 +58,7 @@ const HomePage: FunctionComponent = () => {
     <ScrollView>
       {activeUser ? (
           <View>
-            <Text style={{...genericStyles.marginXAuto, ...styles.greetings}}>Salut {activeUser.attributes.firstName} !</Text>
+            <Text style={{...genericStyles.marginXAuto, ...genericStyles.subtitleText}}>Salut {activeUser.attributes.firstName} !</Text>
             <View style={{...genericStyles.rowBetween, ...styles.center}}>
               <LinkCard text='Scanner' icon={Images.qrCode} link='/qr-scanner'/>
               <LinkCard text='Mes coupons' icon={Images.heart} link='Coupons'/>
@@ -75,11 +69,11 @@ const HomePage: FunctionComponent = () => {
             </View>
             {(coupons && coupons.length > 0) ? (
               <View>
-                <Text style={{...genericStyles.marginXAuto, ...styles.greetings}}> Les dernières offres ! </Text>
+                <Text style={{...genericStyles.marginXAuto, ...genericStyles.subtitleText}}> Les dernières offres ! </Text>
                 <CouponList coupons={coupons} userCoupons={userCoupons}/>
               </View>
             )
-            : (<Text style={{...genericStyles.marginXAuto, ...styles.greetings}}>Désolé, il n'y a pas de coupon disponible pour le moment.</Text>)}
+            : (<Text style={{...genericStyles.marginXAuto, ...genericStyles.subtitleText}}>Désolé, il n'y a pas de coupon disponible pour le moment.</Text>)}
           </View>
         )
         :

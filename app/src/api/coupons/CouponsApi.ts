@@ -30,6 +30,7 @@ export const setCoupon = (coupon: Object): Coupon => {
       maxLimit: coupon['max_limit'],
       unique: coupon['unique'],
       code: coupon['code'],
+      valid: coupon['valid']
     },
     relationships:{
       users: coupon['users'],
