@@ -86,6 +86,34 @@ const genericStyles = StyleSheet.create({
     fontSize: 15,
     color: '#8CD3FF',
   },
+
+  userpage: {
+    // marginTop: 20,
+    color: '#1a202c',
+    textAlign: 'left',
+    backgroundColor: '#e2e8f0',
+    margin: '4%',
+  },
+
+  usertitle: {
+    color: '#2b6cda',
+    fontSize: 30,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  userlabel: {
+    color: '#2b58da',
+    marginBottom: 8,
+    fontSize: 15,
+    marginLeft: 10,
+
+    // lineHeight: 1.2,
+    
+    // marginLeft: 0,
+    // text: 'left',
+    // fontWeight: 'bold',
+  },
 });
 
 export default genericStyles;
