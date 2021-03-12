@@ -45,13 +45,14 @@ routes.get('/users/:id', async (request, response) => {
     return response.map(e => e['STORE']);
   })
   storesIds.push('X');
-  const userCouponIds = await sqlInstance.request('SELECT COUPON FROM USER_COUPON WHERE USER = ?', [request.params.id]).then(response => {
-    return response.map(e => e['COUPON']);
+  const [couponIds, userCouponIds] = await sqlInstance.request('SELECT ID, COUPON FROM USER_COUPON WHERE USER = ?', [request.params.id]).then(response => {
+    return  [response.map(e => e['COUPON']), response.map(e => e['ID']) ];
   });
 
+  couponIds.push('X');
   userCouponIds.push('X');
   // Our queries index result
-  const idx = [0, null, null, null];
+  const idx = [0, null, null, null, null];
   let acc = 0;
   // Everytime an include is settled, we increment the index result
   if(includes){
@@ -67,9 +68,13 @@ routes.get('/users/:id', async (request, response) => {
       acc += 1;
       idx[2] = acc;
       query.push('SELECT * FROM COUPON WHERE ID IN (?)');
-      queryParams.push(userCouponIds);
+      queryParams.push(couponIds);
       acc += 1;
       idx[3] = acc;
+      query.push('SELECT * FROM HISTORIQUE_COUPON WHERE USER_COUPON IN (?)');
+      queryParams.push(userCouponIds);
+      acc += 1;
+      idx[4] = acc;
     }
   }
   // Set our final query
@@ -79,6 +84,7 @@ routes.get('/users/:id', async (request, response) => {
       stores : result[idx[1]],
       userCoupons: result[idx[2]],
       coupons: result[idx[3]],
+      historiqueCoupons: result[idx[4]],
     });
   });
 });

@@ -1,7 +1,8 @@
 import { client } from '../client';
 import {setIncludes} from "../helpers";
-import {User, UserCoupon} from "../../entities";
+import {HistoriqueCoupon, User, UserCoupon} from "../../entities";
 import {setCoupon} from "../coupons/CouponsApi";
+import {setStore} from "../stores/StoresApi";
 
 export interface NewUserData {
   firstName: string,
@@ -52,12 +53,25 @@ export const setUserCoupon = (uc: Object): UserCoupon => {
   };
 }
 
+export const setHistoriqueCoupon = (hc: Object): HistoriqueCoupon => {
+  return {id: hc['id'], attributes: {
+      usedTime: hc['used_time'],
+    },
+    relationships:{
+      userCoupon: hc['user_coupon'],
+    }
+  };
+}
+
+
 const UsersApi = {
-  get: (id: string) => client.get(`/users/${id}?coupons=true`).then(response => {
+  get: (id: string) => client.get(`/users/${id}?coupons=true&stores=true`).then(response => {
     return {
       user: setUser(response.data.user[0]),
       coupons: response.data.coupons.map(c => setCoupon(c)),
       userCoupons: response.data.userCoupons.map(uc => setUserCoupon(uc)),
+      stores: response.data.stores.map(s => setStore(s)),
+      historiqueCoupons: response.data.historiqueCoupons.map(hc => setHistoriqueCoupon(hc)),
     }
   }),
   list: (ids: Array<string>) => client.get('/users', {data: ids}).then(response => {

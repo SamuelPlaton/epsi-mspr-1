@@ -80,20 +80,21 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
   }
 
   return (
-      <View>
-        <Text style={{...styles.date, color: `${(expired || notActiveYet) ? 'red' : 'black'}`}}>{expired && 'Expiré'}{notActiveYet && `Disponible le ${dateStart}`}{(!notActiveYet && !expired) && `Expire le ${dateEnd}`}</Text>
-        <View style={genericStyles.rowStart}>
-          <Image source={require('../../../assets/icons/coupon.png')} style={genericStyles.iconMedium}/>
-          <View style={{overflow: "hidden", maxWidth: "80%"}}>
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.offer}>{offer}*</Text>
-            {(userCoupon && userCoupon.attributes.used > 0) && (
-                <Text>Coupon utilisé {userCoupon.attributes.used} fois</Text>
-            )}
-          </View>
+
+    <View>
+      <Text style={{...styles.date, color: `${(expired || notActiveYet) ? 'red' : 'black'}`}}>{expired && 'Expiré'}{notActiveYet && `Disponible le ${dateStart}`}{(!notActiveYet && !expired) && `Expire le ${dateEnd}`}</Text>
+      <View style={genericStyles.rowStart}>
+        <Image source={require('../../../assets/icons/coupon.png')} style={genericStyles.iconMedium}/>
+        <View style={{overflow: "hidden", maxWidth: "80%"}}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.offer}>{offer}*</Text>
+          {(userCoupon && userCoupon.attributes.used > 0) && (
+            <Text>Coupon utilisé {userCoupon.attributes.used} fois</Text>
+          )}
         </View>
-        <View style={genericStyles.rowBetween}>
-          <Text style={styles.conditions}>*Voir conditions</Text>
+      </View>
+      <View style={genericStyles.rowBetween}>
+        <Text style={styles.conditions}>*Voir conditions</Text>
           <TouchableOpacity activeOpacity={1} onPress={(e) => handleCoupon(e)}>
             <Image source={iconInteraction} style={genericStyles.iconSmall}/>
           </TouchableOpacity>

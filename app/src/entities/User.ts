@@ -12,6 +12,7 @@ export interface UserCoupon {
   };
 }
 
+
 export interface User {
   id: string;
 

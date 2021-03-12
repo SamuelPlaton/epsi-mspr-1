@@ -1,12 +1,11 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import Api from '../../api/Api';
-import { Coupon, User, UserCoupon } from '../../entities';
-import { CouponList, LinkCard } from '../../components';
-import { Images } from '../../images';
-import { genericStyles } from '../../styles';
-import { retrieveActiveUser } from '../../store/UserManager';
+import Api from "../../api/Api";
+import {Coupon, User, UserCoupon} from "../../entities";
+import {CouponList} from "../../components";
+import React, {FunctionComponent, useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {genericStyles} from "../../styles";
+import {retrieveActiveUser} from "../../store/UserManager";
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 /**
  * The react coupons page.
@@ -19,13 +18,16 @@ const CouponsPage: FunctionComponent = () => {
   const [coupons, setCoupons] = useState<Array<Coupon>>(undefined);
   const [userCoupons, setUserCoupons] = useState<Array<UserCoupon>>(undefined);
   const [activeUser, setActiveUser] = useState<User | undefined>(undefined);
-  retrieveActiveUser().then((response) => {
-    setActiveUser(response);
-    return response;
-  });
+
 
   const getData = async () => {
-    if (!activeUser || coupons) {
+    if(!activeUser){
+      retrieveActiveUser().then(response => {
+        setActiveUser(response);
+        return response
+      });
+    }
+    if(!activeUser || coupons){
       return;
     }
     const data = await Api.UsersApi.get(activeUser.id);
@@ -46,7 +48,7 @@ const CouponsPage: FunctionComponent = () => {
 
   const styles = StyleSheet.create({
     center: {
-      width: '85%',
+      width: '80%',
       marginLeft: 'auto',
       marginRight: 'auto',
     },
@@ -62,9 +64,11 @@ const CouponsPage: FunctionComponent = () => {
           </Text>
           <CouponList coupons={coupons} userCoupons={userCoupons} />
         </View>
-      ) : (
-        <Text style={{ ...genericStyles.titleText, ...styles.center }}>Vous n'avez pas encore de coupons</Text>
-      )}
+
+      ) : (<Text style={{...genericStyles.subtitleText, ...styles.center}}>Vous n'avez pas de coupons favoris</Text>)}
+      <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Historic')}>
+        <Text style={{...styles.center, color: '#AAAAAA'}}>Voir mon historique</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };

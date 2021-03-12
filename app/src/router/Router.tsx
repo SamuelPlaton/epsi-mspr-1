@@ -5,6 +5,7 @@ import { HomePage, LoginPage, RegisterPage, ScannerPage, CouponScannedPage, Coup
 const Router: FunctionComponent = () => {
   const Stack = createStackNavigator();
 
+
   return (
     <Stack.Navigator>
       <Stack.Screen name='Home' component={HomePage} />
@@ -13,6 +14,7 @@ const Router: FunctionComponent = () => {
       <Stack.Screen name='Scan' component={ScannerPage} />
       <Stack.Screen name='Coupon' component={CouponScannedPage} />
       <Stack.Screen name="Coupons" component={CouponsPage} />
+      <Stack.Screen name="Historic" component={HistoricPage} />
     </Stack.Navigator>
   );
 };
