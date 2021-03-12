@@ -10,9 +10,8 @@ import {
   Text,
   TouchableHighlight,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
-
 import {Coupon, UserCoupon} from "../../../entities";
 import {genericStyles} from "../../../styles";
 import {Images} from "../../../images";
@@ -20,9 +19,8 @@ import Api from "../../../api/Api";
 import {retrieveActiveUser} from "../../../store/UserManager";
 import {ModifyCouponData, NewCouponData} from "../../../api/coupons/CouponsApi";
 
-
 /* Coupon info Props
- *   coupon: The coupon component
+*   coupon: The coupon component
  */
 export interface Props {
   coupon: Coupon;
@@ -33,12 +31,13 @@ export interface Props {
 /**
  * The react coupon info component.
  */
-
 const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userCoupon}) => {
-  const {title, end, offer, code} = coupon.attributes;
-  const date = moment(end).locale('fr').format('L');
+  const {title, end, offer, start, code} = coupon.attributes;
+  const dateStart = moment(start).locale('fr').format('L');
+  const dateEnd = moment(end).locale('fr').format('L');
+  const expired = new Date(end) < new Date();
+  const notActiveYet = new Date(start) > new Date();
   const iconInteraction = (userCoupon && parseInt(userCoupon.attributes.favored) === 1) ? Images.heartFull : Images.heartEmpty;
-
 
   const styles = StyleSheet.create({
     title: {
@@ -46,38 +45,19 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
       overflow: 'hidden'
     },
     offer: {
-      color: '#ff0000',
+      color: '#ff0000'
     },
     code: {
       fontSize: 40,
-      textAlign: 'center',
+      textAlign: "center"
     },
     conditions: {
       fontSize: 15,
-      color: '#AAAAAA',
+      color: '#AAAAAA'
     },
     date: {
-      marginLeft: 'auto',
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    marginXAuto: {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-    iconSmall: {
-      width: 30,
-      height: 30,
-      margin: 5,
-    },
-    iconMedium: {
-      width: 50,
-      height: 50,
-      margin: 5,
-    },
+      marginLeft: "auto"
+    }
   });
 
   const handleCoupon = async(e: GestureResponderEvent) => {
@@ -97,34 +77,28 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
       const newUserCoupon = await Api.CouponsApi.post(data);
       onUpdateUserCoupon(newUserCoupon, 'add');
     }
-  };
-  const copyCode = (e: GestureResponderEvent) => {
-    e.stopPropagation();
-    Clipboard.setString(code);
-  };
+  }
 
   return (
-    <View>
-      <Text style={styles.date}>Expire le {date}</Text>
-      <View style={styles.row}>
-        <Image source={require('../../../assets/icons/coupon.png')} style={styles.iconMedium} />
-        <View>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.offer}>{offer}*</Text>
+      <View>
+        <Text style={{...styles.date, color: `${(expired || notActiveYet) ? 'red' : 'black'}`}}>{expired && 'Expiré'}{notActiveYet && `Disponible le ${dateStart}`}{(!notActiveYet && !expired) && `Expire le ${dateEnd}`}</Text>
+        <View style={genericStyles.rowStart}>
+          <Image source={require('../../../assets/icons/coupon.png')} style={genericStyles.iconMedium}/>
+          <View style={{overflow: "hidden", maxWidth: "80%"}}>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.offer}>{offer}*</Text>
+            {(userCoupon && userCoupon.attributes.used > 0) && (
+                <Text>Coupon utilisé {userCoupon.attributes.used} fois</Text>
+            )}
+          </View>
         </View>
-      </View>
-      <View style={{ ...styles.row, ...styles.marginXAuto, marginBottom: 5 }}>
-        <Text style={{ ...styles.code, marginRight: 10 }}>{code}</Text>
-        <Button title='Copier' onPress={(e) => copyCode(e)} />
-      </View>
-      <View style={{ ...styles.row, justifyContent: 'space-between' }}>
-        <Text style={styles.conditions}>*Voir conditions</Text>
+        <View style={genericStyles.rowBetween}>
+          <Text style={styles.conditions}>*Voir conditions</Text>
           <TouchableOpacity activeOpacity={1} onPress={(e) => handleCoupon(e)}>
-            <Image source={iconInteraction} style={styles.iconSmall} />
+            <Image source={iconInteraction} style={genericStyles.iconSmall}/>
           </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
+        </View>
+      </View>);
+}
 
 export default CouponInfo;

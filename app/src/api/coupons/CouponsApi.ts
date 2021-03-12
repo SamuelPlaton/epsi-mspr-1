@@ -40,6 +40,9 @@ const CouponsApi = {
   get: (id: string, includes?: Array<string>) => client.get(`/coupons/${id}`, setIncludes(includes)).then(response => {
     return setCoupon(response.data.coupon);
   }),
+  getByCode: (code: string, includes?: Array<string>) => client.get(`/coupons/code/${code}`, setIncludes(includes)).then(response => {
+    return setCoupon(response.data[0]);
+  }),
   list: (ids: Array<string>) => client.get('/coupons', {params: { ids: ids.join(',')} }).then(response => {
     return response.data.map(coupon => setCoupon(coupon));
   }),

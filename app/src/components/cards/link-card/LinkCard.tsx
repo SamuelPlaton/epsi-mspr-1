@@ -36,7 +36,6 @@ const LinkCard: FunctionComponent<Props> = ({icon, text, link}) => {
     }
 
   });
-  const nav = useNavigation();
 
   const redirect = () => {
 

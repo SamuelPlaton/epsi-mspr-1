@@ -13,13 +13,14 @@ const Scanner = () => {
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
+      if (status === 'denied') nav.navigate('Home');
       setHasPermission(status === 'granted');
     })();
   }, []);
 
   const getData = async (data: any) => {
     const coupon: Coupon = await Api.CouponsApi.getByCode(data).then((response) => response);
-    nav.navigate('CouponPage', coupon);
+    nav.navigate('Coupon', coupon);
   };
 
   const handleBarCodeScanned = ({ type, data }) => {
@@ -40,7 +41,7 @@ const Scanner = () => {
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
-      {scanned && <Button title='Tap to Scan Again' onPress={() => setScanned(false)} />}
+      {scanned && <Button title='Scanner à nouveau' onPress={() => setScanned(false)} />}
     </View>
   );
 };
