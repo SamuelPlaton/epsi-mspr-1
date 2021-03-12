@@ -32,8 +32,11 @@ export interface Props {
  * The react coupon info component.
  */
 const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userCoupon}) => {
-  const {title, end, offer, code} = coupon.attributes;
-  const date = moment(end).locale('fr').format('L');
+  const {title, end, offer, start, code} = coupon.attributes;
+  const dateStart = moment(start).locale('fr').format('L');
+  const dateEnd = moment(end).locale('fr').format('L');
+  const expired = new Date(end) < new Date();
+  const notActiveYet = new Date(start) > new Date();
   const iconInteraction = (userCoupon && parseInt(userCoupon.attributes.favored) === 1) ? Images.heartFull : Images.heartEmpty;
 
   const styles = StyleSheet.create({
@@ -75,24 +78,19 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
       onUpdateUserCoupon(newUserCoupon, 'add');
     }
   }
-  const copyCode = (e: GestureResponderEvent) => {
-    e.stopPropagation();
-    Clipboard.setString(code);
-  }
 
   return (
     <View>
-      <Text style={styles.date}>Expire le {date}</Text>
+      <Text style={{...styles.date, color: `${(expired || notActiveYet) ? 'red' : 'black'}`}}>{expired && 'Expiré'}{notActiveYet && `Disponible le ${dateStart}`}{(!notActiveYet && !expired) && `Expire le ${dateEnd}`}</Text>
       <View style={genericStyles.rowStart}>
         <Image source={require('../../../assets/icons/coupon.png')} style={genericStyles.iconMedium}/>
-        <View>
+        <View style={{overflow: "hidden", maxWidth: "80%"}}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.offer}>{offer}*</Text>
+          {(userCoupon && userCoupon.attributes.used > 0) && (
+            <Text>Coupon utilisé {userCoupon.attributes.used} fois</Text>
+          )}
         </View>
-      </View>
-      <View style={{...genericStyles.rowStart, ...genericStyles.marginXAuto, marginBottom: 5}}>
-        <Text style={{...styles.code, marginRight: 10}}>{code}</Text>
-        <Button title='Copier' onPress={(e) => copyCode(e)}/>
       </View>
       <View style={genericStyles.rowBetween}>
         <Text style={styles.conditions}>*Voir conditions</Text>

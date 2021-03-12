@@ -11,9 +11,8 @@ import {useNavigation, useRoute} from '@react-navigation/native';
  * The react coupons page.
  */
 
-const CouponsPage: FunctionComponent = () => {
+const HistoricPage: FunctionComponent = () => {
   const nav = useNavigation();
-  const route = useRoute();
 
   const [coupons, setCoupons] = useState<Array<Coupon>>(undefined);
   const [userCoupons, setUserCoupons] = useState<Array<UserCoupon>>(undefined);
@@ -26,16 +25,16 @@ const CouponsPage: FunctionComponent = () => {
         return response
       });
     }
+
     if(!activeUser || coupons){
       return;
     }
     const data = await Api.UsersApi.get(activeUser.id);
-    const favoredCoupons = data.coupons.filter(c => {
+    const usedCoupons = data.coupons.filter(c => {
       const userCoupon = data.userCoupons.find(uc => uc.relationships.coupon === c.id);
-      const uniqueStatement = c.attributes.unique === 0 || (c.attributes.unique === 1 && userCoupon && parseInt(userCoupon.attributes.used) === 0);
-      return userCoupon && parseInt(userCoupon.attributes.favored) === 1 && c.attributes.valid === 1 && uniqueStatement
+      return userCoupon.attributes.used > 0;
     });
-    setCoupons(favoredCoupons);
+    setCoupons(usedCoupons);
     setUserCoupons(data.userCoupons);
   }
 
@@ -45,7 +44,7 @@ const CouponsPage: FunctionComponent = () => {
 
   const styles = StyleSheet.create({
     center: {
-      width: '80%',
+      width: '85%',
       marginLeft: 'auto',
       marginRight: 'auto'
     }
@@ -58,11 +57,8 @@ const CouponsPage: FunctionComponent = () => {
           <Text style={{...genericStyles.subtitleText, ...genericStyles.marginXAuto}}> Mes Coupons ({coupons.length})</Text>
           <CouponList coupons={coupons} userCoupons={userCoupons}/>
         </View>
-      ) : (<Text style={{...genericStyles.titleText, ...styles.center}}>Vous n'avez pas encore de coupons</Text>)}
-      <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Historic')}>
-        <Text style={{...styles.center, color: '#AAAAAA'}}>Voir mon historique</Text>
-      </TouchableOpacity>
+      ) : (<Text style={{...genericStyles.titleText, ...styles.center}}>Vous n'avez pas encore utilisé de coupons</Text>)}
     </ScrollView>
   );
 }
-export default CouponsPage;
+export default HistoricPage;

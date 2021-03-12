@@ -54,6 +54,7 @@ export const setUserCoupon = (uc: Object): UserCoupon => {
 
 const UsersApi = {
   get: (id: string) => client.get(`/users/${id}?coupons=true`).then(response => {
+    console.log(response.data);
     return {
       user: setUser(response.data.user[0]),
       coupons: response.data.coupons.map(c => setCoupon(c)),
