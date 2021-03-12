@@ -25,8 +25,6 @@ const Scanner = () => {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-
-    console.log(data);
     getData(data);
     // Alert.alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
