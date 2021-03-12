@@ -1,5 +1,6 @@
 import React, {FunctionComponent} from 'react';
-import {View, Text, ScrollView, Alert} from "react-native";
+import {useNavigation} from '@react-navigation/native';
+import {View, Alert} from "react-native";
 import {Coupon, UserCoupon} from "../../../entities";
 import {CouponCard} from "../../cards";
 
@@ -16,12 +17,13 @@ export interface Props {
  */
 const CouponList: FunctionComponent<Props> = ({coupons, userCoupons}) => {
 
+  const nav = useNavigation();
   const handleCouponPopup = (coupon: Coupon) => {
     if(coupon.attributes.valid === 0){
       Alert.alert("Ce coupon n'est plus valide");
       return;
     }
-    console.log('clicked');
+    nav.navigate('Coupon', {id: coupon.id});
   }
 
   const getUserCoupon = (coupon: Coupon): UserCoupon|undefined => {

@@ -15,16 +15,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomePage: FunctionComponent = () => {
   const nav = useNavigation();
-  const route = useRoute();
 
+  // Allow the page to refresh his datas even after a goBack
+  useEffect(() => {
+    nav.addListener('focus', async () => {
+      setCoupons(undefined);
+      await getData();
+    });
+  }, []);
+
+  const route = useRoute();
+  const [refresh, setRefresh] = useState<boolean>(true);
   const [coupons, setCoupons] = useState<Array<Coupon>>(undefined);
   const [userCoupons, setUserCoupons] = useState<Array<UserCoupon>>(undefined);
   // Retrieve our active user
   const [activeUser, setActiveUser] = useState<User | undefined>(route.params ? route.params as User : undefined);
 
   const getData = async () => {
-    //await AsyncStorage.removeItem('activeUser'); // Disconnect
-    // If no active user, retrieve it
     if(!activeUser){
       retrieveActiveUser().then(response => {
         if(response){
@@ -36,34 +43,28 @@ const HomePage: FunctionComponent = () => {
     if(!activeUser || coupons){
       return;
     }
+    //await AsyncStorage.removeItem('activeUser'); // Disconnect
     // retrieve recommended coupons
     const retrievedCoupons = await Api.CouponsApi.listRecommended(activeUser.id).then(response => response);
     setCoupons(retrievedCoupons.coupons);
     setUserCoupons(retrievedCoupons.userCoupons);
+    setRefresh(false);
   }
 
   useEffect(() => {
     getData();
   }, [activeUser]);
 
-  const styles = StyleSheet.create({
-    center: {
-      width: '85%',
-      marginLeft: 'auto',
-      marginRight: 'auto'
-    }
-  });
-
   return (
     <ScrollView>
       {activeUser ? (
           <View>
             <Text style={{...genericStyles.marginXAuto, ...genericStyles.subtitleText}}>Salut {activeUser.attributes.firstName} !</Text>
-            <View style={{...genericStyles.rowBetween, ...styles.center}}>
+            <View style={{...genericStyles.rowBetween, ...genericStyles.center}}>
               <LinkCard text='Scanner' icon={Images.qrCode} link='/qr-scanner'/>
               <LinkCard text='Mes coupons' icon={Images.heart} link='Coupons'/>
             </View>
-            <View style={{...genericStyles.rowBetween, ...styles.center}}>
+            <View style={{...genericStyles.rowBetween, ...genericStyles.center}}>
               <LinkCard text='Etablissements' icon={Images.googleMaps} link='/establishments'/>
               <LinkCard text='Commander' icon={Images.globe} link='https://google.com'/>
             </View>

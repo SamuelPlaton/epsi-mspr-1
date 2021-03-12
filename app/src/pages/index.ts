@@ -1,3 +1,4 @@
+export { default as CouponPage } from './coupon-page/CouponPage';
 export { default as CouponsPage } from './coupons-page/CouponsPage';
 export { default as HistoricPage } from './historic-page/HistoricPage';
 export { default as HomePage } from './home-page/HomePage';

@@ -35,17 +35,9 @@ const CouponCard: FunctionComponent<Props> = ({coupon, onClick, userCoupon}) => 
     }
   });
 
-  const handleUpdateUserCoupon = (uc: UserCoupon, action: string) => {
-    if(action === 'add'){
-      setSyncedUserCoupon(uc)
-    }else{
-      setSyncedUserCoupon(undefined);
-    }
-  }
-
   return (
     <BaseCard bgColor={coupon.attributes.valid === 1 ? '#FEFEFE' : '#e3c7c5'} style={styles.card} onClick={() => onClick(coupon)}>
-      <CouponInfo coupon={coupon} userCoupon={syncedUserCoupon} onUpdateUserCoupon={handleUpdateUserCoupon}/>
+      <CouponInfo coupon={coupon} userCoupon={syncedUserCoupon} onUpdateUserCoupon={(userCoupon) => setSyncedUserCoupon(userCoupon)}/>
     </BaseCard>);
 }
 

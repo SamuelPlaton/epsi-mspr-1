@@ -1,7 +1,7 @@
 import { client } from '../client';
-import {setIncludes} from "../helpers";
 import {Coupon} from "../../entities";
-import {setUserCoupon} from "../users/UsersApi";
+import {setHistoriqueCoupon, setUserCoupon} from "../users/UsersApi";
+import {setStore} from "../stores/StoresApi";
 
 export interface NewCouponData {
   userId: string,
@@ -16,6 +16,7 @@ export interface ModifyCouponData {
   userCouponId: string,
   used: string,
   favored: string,
+  action?: string,
 }
 
 export const setCoupon = (coupon: Object): Coupon => {
@@ -40,9 +41,15 @@ export const setCoupon = (coupon: Object): Coupon => {
 }
 
 const CouponsApi = {
-  get: (id: string, includes?: Array<string>) => client.get(`/coupons/${id}`, setIncludes(includes)).then(response => {
-    return setCoupon(response.data.coupon);
-  }),
+  get: (id: string, userId: string, token: string) => client.get(`/coupons/${id}?stores=true&user=${userId}&token=${encodeURIComponent(token)}`).then(response => {
+    return {
+      coupon: setCoupon(response.data.coupon[0]),
+      historiqueCoupons: response.data.historiqueCoupons.map(hc => setHistoriqueCoupon(hc)),
+      userCoupon: setUserCoupon(response.data.userCoupons[0]),
+      stores: response.data.stores.map(s => setStore(s)),
+  };
+  }).catch(err => err),
+
   list: (ids: Array<string>) => client.get('/coupons', {params: { ids: ids.join(',')} }).then(response => {
     return response.data.map(coupon => setCoupon(coupon));
   }),
