@@ -64,7 +64,6 @@ const HomePage: FunctionComponent = () => {
   return (
     <ScrollView>
       {activeUser ? (
-<<<<<<< HEAD
         <View>
           <Text style={{ ...genericStyles.marginXAuto, ...genericStyles.subtitleText }}>
             Salut {activeUser.attributes.firstName} !
@@ -72,26 +71,6 @@ const HomePage: FunctionComponent = () => {
           <View style={{ ...genericStyles.rowBetween, ...genericStyles.center }}>
             <LinkCard text='Scanner' icon={Images.qrCode} link='Scan' />
             <LinkCard text='Mes coupons' icon={Images.heart} link='Coupons' />
-=======
-          <View>
-            <Text style={{...genericStyles.marginXAuto, ...genericStyles.subtitleText}}>Salut {activeUser.attributes.firstName} !</Text>
-            <View style={{...genericStyles.rowBetween, ...styles.center}}>
-            <Button title='Profile' onPress={() => nav.navigate('User')}/>
-              <LinkCard text='Scanner' icon={Images.qrCode} link='/qr-scanner'/>
-              <LinkCard text='Mes coupons' icon={Images.heart} link='Coupons'/>
-            </View>
-            <View style={{...genericStyles.rowBetween, ...styles.center}}>
-              <LinkCard text='Etablissements' icon={Images.googleMaps} link='/establishments'/>
-              <LinkCard text='Commander' icon={Images.globe} link='https://google.com'/>
-            </View>
-            {(coupons && coupons.length > 0) ? (
-              <View>
-                <Text style={{...genericStyles.marginXAuto, ...genericStyles.subtitleText}}> Les dernières offres ! </Text>
-                <CouponList coupons={coupons} userCoupons={userCoupons}/>
-              </View>
-            )
-            : (<Text style={{...genericStyles.marginXAuto, ...genericStyles.subtitleText}}>Désolé, il n'y a pas de coupon disponible pour le moment.</Text>)}
->>>>>>> init user page
           </View>
           <View style={{ ...genericStyles.rowBetween, ...genericStyles.center }}>
             <LinkCard text='Etablissements' icon={Images.googleMaps} link='Map' />
@@ -105,7 +84,6 @@ const HomePage: FunctionComponent = () => {
               </Text>
               <CouponList coupons={coupons} userCoupons={userCoupons} />
             </View>
-<<<<<<< HEAD
           ) : (
             <Text style={{ ...genericStyles.marginXAuto, ...genericStyles.subtitleText }}>
               Désolé, il n'y a pas de coupon disponible pour le moment.
@@ -120,11 +98,6 @@ const HomePage: FunctionComponent = () => {
           <Text style={{ marginTop: 5, marginBottom: 5, textAlign: 'center' }}>Ou</Text>
           <View style={{ width: '50%', ...genericStyles.marginXAuto }}>
             <Button title="S'inscrire" onPress={() => nav.navigate('Register')} />
-=======
-            <View style={{width: '50%', ...genericStyles.marginXAuto}}>
-            <Button title="UserPage" onPress={() => nav.navigate('User')}/>
-            </View>
->>>>>>> init user page
           </View>
         </View>
       )}
