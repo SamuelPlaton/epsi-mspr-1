@@ -19,14 +19,12 @@ const Scanner = () => {
 
   const getData = async (data: any) => {
     const coupon: Coupon = await Api.CouponsApi.getByCode(data).then((response) => response);
-    console.log(coupon);
     nav.navigate('CouponPage', coupon);
   };
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     getData(data);
-    // Alert.alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
   if (hasPermission === null) {
