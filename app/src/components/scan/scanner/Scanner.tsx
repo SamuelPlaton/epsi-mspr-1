@@ -20,10 +20,13 @@ const Scanner = () => {
 
   const getData = async (data: any) => {
     const coupon: Coupon = await Api.CouponsApi.getByCode(data).then((response) => response);
-    nav.navigate('Coupon', coupon);
+    // nav.navigate('Coupon', coupon);
   };
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = ({ data }) => {
+    if (scanned) {
+      return;
+    }
     setScanned(true);
     getData(data);
   };
@@ -37,10 +40,7 @@ const Scanner = () => {
 
   return (
     <View style={styles.container}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
+      <BarCodeScanner onBarCodeScanned={handleBarCodeScanned} style={StyleSheet.absoluteFillObject} />
       {scanned && <Button title='Scanner à nouveau' onPress={() => setScanned(false)} />}
     </View>
   );
