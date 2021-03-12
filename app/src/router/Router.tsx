@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import {CouponsPage, HomePage, LoginPage, RegisterPage} from '../pages';
+import {UserPage, CouponsPage, HomePage, LoginPage, RegisterPage} from '../pages';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -11,6 +11,7 @@ const Router:FunctionComponent = () => {
         <Stack.Screen name="Login" component={LoginPage} />
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="Coupons" component={CouponsPage} />
+        <Stack.Screen name="User" component={UserPage} />
       </Stack.Navigator>
     );
   }
