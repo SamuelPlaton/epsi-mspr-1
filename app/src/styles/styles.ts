@@ -88,12 +88,20 @@ const genericStyles = StyleSheet.create({
   },
 
   userpage: {
+<<<<<<< HEAD
     margin: '4%',
     backgroundColor: '#E0E0E0',
     borderWidth: 4,
     borderRadius: 25,
     paddingBottom: 60,
     borderColor: 'powderblue',
+=======
+    // marginTop: 20,
+    color: '#1a202c',
+    textAlign: 'left',
+    backgroundColor: '#e2e8f0',
+    margin: '4%',
+>>>>>>> init user page
   },
 
   usertitle: {
@@ -101,6 +109,7 @@ const genericStyles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     fontWeight: 'bold',
+<<<<<<< HEAD
     marginLeft: 8,
     marginBottom: 12,
   },
@@ -115,6 +124,22 @@ const genericStyles = StyleSheet.create({
   usertext: {
     color: 'black',
   }
+=======
+    marginBottom: 12,
+  },
+  userlabel: {
+    color: '#2b58da',
+    marginBottom: 8,
+    fontSize: 15,
+    marginLeft: 10,
+
+    // lineHeight: 1.2,
+    
+    // marginLeft: 0,
+    // text: 'left',
+    // fontWeight: 'bold',
+  },
+>>>>>>> init user page
 });
 
 export default genericStyles;

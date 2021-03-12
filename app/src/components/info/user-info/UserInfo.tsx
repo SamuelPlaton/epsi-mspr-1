@@ -8,7 +8,7 @@ import {genericStyles} from "../../../styles";
 import {retrieveActiveUser} from "../../../store/UserManager";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setStore} from "../../../api/stores/StoresApi";
+import setStore from "../../../api/stores/StoresApi";
 import moment from "moment";
 import StoreList from "../../list/store-list/StoreList";
 
