@@ -205,7 +205,7 @@ routes.get('/coupons/recommended/:idUser', async (request, response) => {
     });
 
     userCouponIds.push('X');
-    sqlInstance.request('SELECT * FROM COUPON WHERE ID IN (?) AND `VALID` = 1', [couponIds]).then(result => {
+    sqlInstance.request('SELECT * FROM COUPON WHERE ID IN (?) AND `VALID` = 1 AND NOW() BETWEEN `START` AND `END`', [couponIds]).then(result => {
         response.send({
             coupons: result.filter(res => !(userCouponIds.includes(res['id']) && res['unique'] === 1)),
             userCoupons: userCoupons
