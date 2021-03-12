@@ -58,7 +58,7 @@ const CouponsPage: FunctionComponent = () => {
           <Text style={{...genericStyles.subtitleText, ...genericStyles.marginXAuto}}> Mes Coupons ({coupons.length})</Text>
           <CouponList coupons={coupons} userCoupons={userCoupons}/>
         </View>
-      ) : (<Text style={{...genericStyles.titleText, ...styles.center}}>Vous n'avez pas encore de coupons</Text>)}
+      ) : (<Text style={{...genericStyles.subtitleText, ...styles.center}}>Vous n'avez pas de coupons favoris</Text>)}
       <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Historic')}>
         <Text style={{...styles.center, color: '#AAAAAA'}}>Voir mon historique</Text>
       </TouchableOpacity>
