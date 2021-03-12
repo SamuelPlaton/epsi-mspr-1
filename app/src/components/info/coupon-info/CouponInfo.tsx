@@ -1,14 +1,11 @@
-import React, {FunctionComponent, useEffect, useState} from 'react';
+import React, {FunctionComponent} from 'react';
 import moment from 'moment';
 import 'moment/locale/fr';
 import {
-  Button,
-  Clipboard,
   GestureResponderEvent,
   Image,
   StyleSheet,
   Text,
-  TouchableHighlight,
   TouchableOpacity,
   View
 } from 'react-native';
@@ -25,14 +22,14 @@ import {ModifyCouponData, NewCouponData} from "../../../api/coupons/CouponsApi";
 export interface Props {
   coupon: Coupon;
   userCoupon?: UserCoupon;
-  onUpdateUserCoupon: (uc: UserCoupon, action: string) => void;
+  onUpdateUserCoupon: (uc: UserCoupon) => void;
 }
 
 /**
  * The react coupon info component.
  */
 const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userCoupon}) => {
-  const {title, end, offer, start, code} = coupon.attributes;
+  const {title, end, offer, start} = coupon.attributes;
   const dateStart = moment(start).locale('fr').format('L');
   const dateEnd = moment(end).locale('fr').format('L');
   const expired = new Date(end) < new Date();
@@ -46,10 +43,6 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
     },
     offer: {
       color: '#ff0000'
-    },
-    code: {
-      fontSize: 40,
-      textAlign: "center"
     },
     conditions: {
       fontSize: 15,
@@ -71,11 +64,11 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
         used: userCoupon.attributes.used.toString(),
         favored: userCoupon.attributes.favored === "1" ? "0" : "1"}
       const updatedUserCoupon = await Api.CouponsApi.put(data);
-      onUpdateUserCoupon(updatedUserCoupon, 'add');
+      onUpdateUserCoupon(updatedUserCoupon);
     } else {
       const data: NewCouponData = { couponId: coupon.id, userId: activeUser.id, userToken: activeUser.attributes.token}
       const newUserCoupon = await Api.CouponsApi.post(data);
-      onUpdateUserCoupon(newUserCoupon, 'add');
+      onUpdateUserCoupon(newUserCoupon);
     }
   }
 

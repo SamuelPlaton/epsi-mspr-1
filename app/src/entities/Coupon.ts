@@ -14,7 +14,7 @@ export interface Coupon {
     valid: number;
   };
 
-  relationships: {
+  relationships?: {
     users: string[];
     stores: string[];
   };
