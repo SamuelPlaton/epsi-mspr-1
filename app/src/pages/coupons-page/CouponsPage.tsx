@@ -19,6 +19,7 @@ const CouponsPage: FunctionComponent = () => {
   const [userCoupons, setUserCoupons] = useState<Array<UserCoupon>>(undefined);
   const [activeUser, setActiveUser] = useState<User | undefined>(undefined);
 
+
   const getData = async () => {
     if(!activeUser){
       retrieveActiveUser().then(response => {
@@ -30,14 +31,16 @@ const CouponsPage: FunctionComponent = () => {
       return;
     }
     const data = await Api.UsersApi.get(activeUser.id);
-    const favoredCoupons = data.coupons.filter(c => {
-      const userCoupon = data.userCoupons.find(uc => uc.relationships.coupon === c.id);
-      const uniqueStatement = c.attributes.unique === 0 || (c.attributes.unique === 1 && userCoupon && parseInt(userCoupon.attributes.used) === 0);
-      return userCoupon && parseInt(userCoupon.attributes.favored) === 1 && c.attributes.valid === 1 && uniqueStatement
+    const favoredCoupons = data.coupons.filter((c) => {
+      const userCoupon = data.userCoupons.find((uc) => uc.relationships.coupon === c.id);
+      const uniqueStatement =
+        c.attributes.unique === 0 ||
+        (c.attributes.unique === 1 && userCoupon && parseInt(userCoupon.attributes.used) === 0);
+      return userCoupon && parseInt(userCoupon.attributes.favored) === 1 && c.attributes.valid === 1 && uniqueStatement;
     });
     setCoupons(favoredCoupons);
     setUserCoupons(data.userCoupons);
-  }
+  };
 
   useEffect(() => {
     getData();
@@ -47,22 +50,26 @@ const CouponsPage: FunctionComponent = () => {
     center: {
       width: '80%',
       marginLeft: 'auto',
-      marginRight: 'auto'
-    }
+      marginRight: 'auto',
+    },
   });
 
   return (
     <ScrollView>
-      {( coupons && coupons.length > 0) ? (
+      {coupons && coupons.length > 0 ? (
         <View>
-          <Text style={{...genericStyles.subtitleText, ...genericStyles.marginXAuto}}> Mes Coupons ({coupons.length})</Text>
-          <CouponList coupons={coupons} userCoupons={userCoupons}/>
+          <Text style={{ ...genericStyles.subtitleText, ...genericStyles.marginXAuto }}>
+            {' '}
+            Mes Coupons ({coupons.length})
+          </Text>
+          <CouponList coupons={coupons} userCoupons={userCoupons} />
         </View>
+
       ) : (<Text style={{...genericStyles.subtitleText, ...styles.center}}>Vous n'avez pas de coupons favoris</Text>)}
       <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Historic')}>
         <Text style={{...styles.center, color: '#AAAAAA'}}>Voir mon historique</Text>
       </TouchableOpacity>
     </ScrollView>
   );
-}
+};
 export default CouponsPage;

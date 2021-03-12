@@ -80,6 +80,7 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
   }
 
   return (
+
     <View>
       <Text style={{...styles.date, color: `${(expired || notActiveYet) ? 'red' : 'black'}`}}>{expired && 'Expiré'}{notActiveYet && `Disponible le ${dateStart}`}{(!notActiveYet && !expired) && `Expire le ${dateEnd}`}</Text>
       <View style={genericStyles.rowStart}>
@@ -97,8 +98,8 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
           <TouchableOpacity activeOpacity={1} onPress={(e) => handleCoupon(e)}>
             <Image source={iconInteraction} style={genericStyles.iconSmall}/>
           </TouchableOpacity>
-      </View>
-    </View>);
+        </View>
+      </View>);
 }
 
 export default CouponInfo;

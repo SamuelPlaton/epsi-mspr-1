@@ -4,9 +4,9 @@ import {Coupon} from "../../entities";
 import {setUserCoupon} from "../users/UsersApi";
 
 export interface NewCouponData {
-  userId: string,
-  userToken: string,
-  couponId: string
+  userId: string;
+  userToken: string;
+  couponId: string;
 }
 
 export interface ModifyCouponData {
@@ -19,7 +19,8 @@ export interface ModifyCouponData {
 }
 
 export const setCoupon = (coupon: Object): Coupon => {
-  return {id: coupon['id'],
+  return {
+    id: coupon.id,
     attributes: {
       title: coupon['title'],
       start: coupon['start'],
@@ -32,16 +33,15 @@ export const setCoupon = (coupon: Object): Coupon => {
       code: coupon['code'],
       valid: coupon['valid']
     },
-    relationships:{
-      users: coupon['users'],
-      stores: coupon['stores'],
-    }
   };
-}
+};
 
 const CouponsApi = {
   get: (id: string, includes?: Array<string>) => client.get(`/coupons/${id}`, setIncludes(includes)).then(response => {
     return setCoupon(response.data.coupon);
+  }),
+  getByCode: (code: string, includes?: Array<string>) => client.get(`/coupons/code/${code}`, setIncludes(includes)).then(response => {
+    return setCoupon(response.data[0]);
   }),
   list: (ids: Array<string>) => client.get('/coupons', {params: { ids: ids.join(',')} }).then(response => {
     return response.data.map(coupon => setCoupon(coupon));
