@@ -1,5 +1,6 @@
 import express from 'express';
 import { sqlInstance } from '../../index.js';
+import {checkToken} from "../security/security.js";
 
 export const routes = express.Router();
 // Method get of data of a coupon
@@ -22,8 +23,14 @@ export const routes = express.Router();
  *            properties:
  *            stores:
  *              type: string
+ *            user:
+ *              type: string
+ *            token:
+ *              type: string
  *            example:
  *              stores: true
+ *              user: userId
+ *              token: userToken
  *     responses:
  *      '200':
  *        description: Coupon data is retrieved
@@ -37,7 +44,7 @@ routes.get('/coupons/:id', async (request, response) => {
     const query = ['SELECT * FROM COUPON C WHERE C.ID = ?'];
     const queryParams = [request.params.id];
     // Our queries index result
-    const idx = [0, null];
+    const idx = [0, null, null, null];
     let acc = 0;
     const storesIds = await sqlInstance.request('SELECT STORE FROM COUPON_STORE WHERE COUPON = ?', [request.params.id]).then(response => {
         return response.map(e => e['STORE']);
@@ -50,6 +57,25 @@ routes.get('/coupons/:id', async (request, response) => {
             queryParams.push(storesIds);
             acc += 1;
             idx[1] = acc;
+        }if(includes.user && includes.token){
+            const properToken = await checkToken(includes.token, includes.user);
+            if(!properToken){
+                response.status(403);
+                response.send('-2').end();
+                return;
+            }
+            const userCouponsIds = await sqlInstance.request('SELECT ID FROM USER_COUPON WHERE COUPON = ? AND USER = ?', [request.params.id, includes.user]).then(response => {
+                return response.map(r => r['ID']);
+            });
+
+            query.push('SELECT * FROM USER_COUPON WHERE ID IN (?)');
+            queryParams.push(userCouponsIds);
+            acc += 1;
+            idx[2] = acc;
+            query.push('SELECT * FROM HISTORIQUE_COUPON WHERE USER_COUPON IN (?)');
+            queryParams.push(userCouponsIds);
+            acc += 1;
+            idx[3] = acc;
         }
     }
     // Set our final query
@@ -57,6 +83,8 @@ routes.get('/coupons/:id', async (request, response) => {
         response.send({
             coupon: result[idx[0]],
             stores : result[idx[1]],
+            userCoupons: result[idx[2]],
+            historiqueCoupons: result[idx[3]],
         });
     });
 });
