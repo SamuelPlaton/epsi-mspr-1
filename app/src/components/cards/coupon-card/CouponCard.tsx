@@ -44,7 +44,7 @@ const CouponCard: FunctionComponent<Props> = ({coupon, onClick, userCoupon}) => 
   }
 
   return (
-    <BaseCard bgColor='#FEFEFE' style={styles.card} onClick={() => onClick(coupon)}>
+    <BaseCard bgColor={coupon.attributes.valid === 1 ? '#FEFEFE' : '#e3c7c5'} style={styles.card} onClick={() => onClick(coupon)}>
       <CouponInfo coupon={coupon} userCoupon={syncedUserCoupon} onUpdateUserCoupon={handleUpdateUserCoupon}/>
     </BaseCard>);
 }
