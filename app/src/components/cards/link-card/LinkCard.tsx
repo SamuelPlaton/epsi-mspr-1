@@ -31,10 +31,8 @@ const LinkCard: FunctionComponent<Props> = ({ icon, text, link }) => {
   const nav = useNavigation();
 
   const redirect = () => {
-    if (link === 'scan') {
-      nav.navigate('Scan');
-    }
-   // console.log(link);
+    nav.navigate(link);
+    console.log(link);
   };
 
   return (

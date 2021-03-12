@@ -56,7 +56,7 @@ const HomePage: FunctionComponent = () => {
             Salut {activeUser.attributes.firstName} {activeUser.attributes.lastName}
           </Text>
           <View style={{ ...genericStyles.rowBetween, ...styles.center }}>
-            <LinkCard text='Scanner' icon={Images.qrCode} link='scan' />
+            <LinkCard text='Scanner' icon={Images.qrCode} link='Scan' />
             <LinkCard text='Mes coupons' icon={Images.heart} link='/my-coupons' />
           </View>
           <View style={{ ...genericStyles.rowBetween, ...styles.center }}>
