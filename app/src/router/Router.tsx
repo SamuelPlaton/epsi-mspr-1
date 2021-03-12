@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import {UserPage, CouponsPage, HomePage, LoginPage, RegisterPage} from '../pages';
+import { HomePage, LoginPage, RegisterPage, CouponsPage, UserPage } from '../pages';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
