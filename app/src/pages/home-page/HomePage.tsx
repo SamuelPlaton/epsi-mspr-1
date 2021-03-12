@@ -58,6 +58,7 @@ const HomePage: FunctionComponent = () => {
           <View>
             <Text style={{...genericStyles.marginXAuto, ...styles.greetings}}>Salut {activeUser.attributes.firstName} {activeUser.attributes.lastName}</Text>
             <View style={{...genericStyles.rowBetween, ...styles.center}}>
+            <Button title='Profile' onPress={() => nav.navigate('User')}/>
               <LinkCard text='Scanner' icon={Images.qrCode} link='/qr-scanner'/>
               <LinkCard text='Mes coupons' icon={Images.heart} link='/my-coupons'/>
             </View>
@@ -78,6 +79,9 @@ const HomePage: FunctionComponent = () => {
             <Text style={{marginTop: 5, marginBottom: 5, textAlign: 'center'}}>Ou</Text>
             <View style={{width: '50%', ...genericStyles.marginXAuto}}>
             <Button title="S'inscrire" onPress={() => nav.navigate('Register')}/>
+            </View>
+            <View style={{width: '50%', ...genericStyles.marginXAuto}}>
+            <Button title="UserPage" onPress={() => nav.navigate('User')}/>
             </View>
           </View>
         )
