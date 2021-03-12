@@ -46,27 +46,27 @@ export const routes = express.Router();
  *
  */
 routes.put('/users/:id', async (request, response) => {
-  const {firstName, lastName, email, token} = request.body.data;
-  if (!firstName || !lastName || !email || !token) {
-    response.send('Bad parameters');
-    response.status(400).end();
+  const data = request.body.data;
+  if ( !data || !data.firstName || !data.lastName || !data.email || !data.token) {
+    response.status(400);
+    response.send('-1').end();
     return;
   }
 
-  const properToken = await checkToken(token, request.params.id);
+  const properToken = await checkToken(data.token, request.params.id);
   if(!properToken){
-    response.send('Wrong token');
-    response.status(403).end();
+    response.status(403);
+    response.send('-2').end();
     return;
   }
 
   // Check if email or phone already exist
-  const emailExist = await sqlInstance.request('SELECT * FROM USER WHERE EMAIL = ? AND ID != ?', [email, request.params.id]).then(result => {
+  const emailExist = await sqlInstance.request('SELECT * FROM USER WHERE EMAIL = ? AND ID != ?', [data.email, request.params.id]).then(result => {
     return result.length > 0;
   });
   if(emailExist){
-    response.send('Email already exist');
-    response.status(403).end();
+    response.status(403);
+    response.send('-20').end();
     return;
   }
 
@@ -74,12 +74,18 @@ routes.put('/users/:id', async (request, response) => {
   const sql = 'UPDATE USER SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ? WHERE ID = ?';
   sqlInstance.request(sql,
     [
-      firstName,
-      lastName,
-      email,
+      data.firstName,
+      data.lastName,
+      data.email,
       request.params.id]).then(result => {
-    response.send('');
-    response.status(200).end();
+    response.status(200);
+    response.send({
+      id: request.params.id,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      token: data.token,
+      email: data.email
+    }).end();
   });
 });
 
@@ -120,33 +126,33 @@ routes.put('/users/:id', async (request, response) => {
  *
  */
 routes.put('/users/password/:id', async (request, response) => {
-  const {previousPassword, newPassword, token} = request.body.data;
-  if (!previousPassword || !newPassword || !token) {
-    response.send('Bad parameters');
-    response.status(400).end();
+  const data = request.body.data;
+  if ( !data || !data.previousPassword || !data.newPassword || !data.token) {
+    response.status(400);
+    response.send('-1').end();
     return;
   }
 
-  const properToken = await checkToken(token, request.params.id);
+  const properToken = await checkToken(data.token, request.params.id);
   if(!properToken){
-    response.send('Wrong token');
-    response.status(403).end();
+    response.status(403);
+    response.send('-2').end();
     return;
   }
 
   // Encrypt old password and compare it to token
-  const pwdToToken = cryptoJS.AES.encrypt(previousPassword, '22787802-a6e7-4c3d-8fc1-aab0ece1cb41');
+  const pwdToToken = cryptoJS.AES.encrypt(data.previousPassword, '22787802-a6e7-4c3d-8fc1-aab0ece1cb41');
   const pwd = cryptoJS.AES.decrypt(pwdToToken, '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString();
   // Decrypt DB Token
-  const tokenToPwd = cryptoJS.AES.decrypt(token, '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString();
+  const tokenToPwd = cryptoJS.AES.decrypt(data.token, '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString();
 
   if(pwd !== tokenToPwd){
-    response.send('Wrong previous password');
-    response.status(403).end();
+    response.status(403);
+    response.send('-23').end();
     return;
   }
   // Crypt new password
-  const newToken = cryptoJS.AES.encrypt(newPassword, '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString();
+  const newToken = cryptoJS.AES.encrypt(data.newPassword, '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString();
 
   // Update our user
   const sql = 'UPDATE USER SET TOKEN = ? WHERE ID = ?';
@@ -154,7 +160,7 @@ routes.put('/users/password/:id', async (request, response) => {
       [
         newToken,
         request.params.id]).then(result => {
-    response.send(newToken);
-    response.status(200).end();
+    response.status(200);
+    response.send(newToken).end();
   });
 });

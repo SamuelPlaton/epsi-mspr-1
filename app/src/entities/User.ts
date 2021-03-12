@@ -2,7 +2,8 @@ export interface UserCoupon {
   id: string;
 
   attributes: {
-    used: boolean;
+    used: number;
+    favored: string;
   };
 
   relationships: {

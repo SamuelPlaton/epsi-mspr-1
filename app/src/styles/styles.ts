@@ -14,6 +14,12 @@ const genericStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  subtitleText: {
+    width: '80%',
+    marginTop: 10,
+    marginBottom: 10,
+    fontSize: 20
+  },
   rowBetween: {
     display: 'flex',
     flexDirection: 'row',

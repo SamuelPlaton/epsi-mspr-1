@@ -1,7 +1,7 @@
 import express from 'express';
-import {checkToken, checkUniqueCoupon, checkUserCoupon, checkMaxLimitCoupon, checkUsedCoupon} from "../security/security.js";
+import {checkToken, checkUniqueCoupon, checkUserCoupon} from "../security/security.js";
 import {sqlInstance} from "../../index.js";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 export const routes = express.Router();
 
@@ -41,53 +41,64 @@ export const routes = express.Router();
  *        description: Wrong token
  */
 routes.post('/coupons', async (request, response) => {
-    const {userId, userToken, couponId} = request.body.data;
+    const data = request.body.data;
     const uuid = uuidv4();
     // Parameters check
-    if(!userId || !userToken || !couponId){
-        response.send('Bad parameters');
-        response.status(400).end();
+    if (!data || !data.userId || !data.userToken || !data.couponId) {
+        response.status(400);
+        response.send('-1').end();
         return;
     }
     // Token check
-    const properToken = await checkToken(userToken, userId);
-    if(!properToken){
-        response.send('Wrong token');
-        response.status(403).end();
+    const properToken = await checkToken(data.userToken, data.userId);
+    if (!properToken) {
+        response.status(403);
+        response.send('-2').end();
         return;
     }
 
 
     // Check if coupon is valid
-    const couponValid = await sqlInstance.request('SELECT * FROM COUPON WHERE ID = ? AND VALID = 1', [couponId]).then(result => {
+    const couponValid = await sqlInstance.request('SELECT * FROM COUPON WHERE ID = ? AND VALID = 1', [data.couponId]).then(result => {
         return result.length > 0;
     });
-    if(!couponValid){
-        response.send('-1'); // Invalid coupon
-        response.status(403).end();
+    if (!couponValid) {
+        response.status(403);
+        response.send('-10').end(); // Invalid coupon
         return;
     }
-    const uniqueCoupon = await checkUniqueCoupon(couponId);
-    const alreadyUsedCoupon = await checkUserCoupon(userId, couponId);
-    if(uniqueCoupon && alreadyUsedCoupon){
-        response.send('-2'); // Used coupon
-        response.status(403).end();
+    const uniqueCoupon = await checkUniqueCoupon(data.couponId);
+    const alreadyUsedCoupon = await checkUserCoupon(data.userId, data.couponId);
+    if (uniqueCoupon && alreadyUsedCoupon) {
+        response.status(403);
+        response.send('-11').end(); // Used coupon
         return;
     }
 
+    // Check if coupon is not already pending by the user
+    const pendingCoupon = await sqlInstance.request('SELECT * FROM USER_COUPON WHERE USER = ? AND COUPON = ? AND USED = 0', [data.userId, data.couponId]).then(result => {
+        return result.length > 0;
+    });
+    if(pendingCoupon){
+        response.status(403);
+        response.send('-12').end(); // Pending coupon
+    }
+
     // Do insertion
-    const sql = "INSERT INTO USER_COUPON(ID, USER, COUPON, USED) VALUES(?, ?, ?, ?)";
+    const sql = "INSERT INTO USER_COUPON(ID, USER, COUPON, USED, FAVORED) VALUES(?, ?, ?, ?, ?)";
     sqlInstance.request(sql,
         [uuid,
-            userId,
-            couponId,
-            0]).then(result => {
+            data.userId,
+            data.couponId,
+            0,
+            1]).then(result => {
+        response.status(201);
         response.send({
             id: uuid,
-            user: userId,
-            couponId: couponId,
-            used: 0
-        });
-        response.status(201).end();
+            user: data.userId,
+            coupon: data.couponId,
+            used: 0,
+            favored: 1
+        }).end();
     });
 });

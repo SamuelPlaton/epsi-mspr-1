@@ -35,18 +35,18 @@ export const routes = express.Router();
  *        description: Unauthorized
  */
 routes.delete('/users/:id', async (request, response) => {
-  const { token } = request.body.data;
+  const data = request.body.data;
 
-  if (!token) {
-    response.send('Bad parameters');
-    response.status(400).end();
+  if (!data || !data.token) {
+    response.status(400);
+    response.send('-1').end();
     return;
   }
 
-  const properToken = await checkToken(token, request.params.id);
+  const properToken = await checkToken(data.token, request.params.id);
   if(!properToken){
-    response.send('Wrong token');
-    response.status(403).end();
+    response.status(403);
+    response.send('-2').end();
     return;
   }
 
@@ -57,8 +57,8 @@ routes.delete('/users/:id', async (request, response) => {
     await sqlInstance.request('DELETE FROM USER_COUPON WHERE USER = ? AND USED = 0', [request.params.id]);
     // Delete user
     sqlInstance.request('DELETE FROM USER WHERE ID = ?', [request.params.id]).then(result => {
-      response.send('User Deleted');
-      response.status(204).end();
+      response.status(204);
+      response.send('20').end();
     });
   } catch (err) {
     throw new Error(err);

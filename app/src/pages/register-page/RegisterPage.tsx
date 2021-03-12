@@ -1,12 +1,16 @@
-import React, { FunctionComponent } from 'react';
-import { RegisterForm } from "../../components";
+
+import React, {FunctionComponent} from 'react';
+import {RegisterForm} from "../../components";
+
 import {ScrollView} from "react-native";
 
-const RegisterPage:FunctionComponent = () => {
+const RegisterPage: FunctionComponent = () => {
   return (
-      <ScrollView>
-    <RegisterForm/>
-      </ScrollView>
+
+    <ScrollView>
+      <RegisterForm/>
+    </ScrollView>
+
   );
 }
 

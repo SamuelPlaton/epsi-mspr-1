@@ -1,5 +1,6 @@
-import React, { FunctionComponent } from 'react';
+import React, {FunctionComponent, useEffect, useState} from 'react';
 import moment from 'moment';
+import 'moment/locale/fr';
 import {
   Button,
   Clipboard,
@@ -11,7 +12,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Coupon, UserCoupon } from '../../../entities';
+
+import {Coupon, UserCoupon} from "../../../entities";
+import {genericStyles} from "../../../styles";
+import {Images} from "../../../images";
+import Api from "../../../api/Api";
+import {retrieveActiveUser} from "../../../store/UserManager";
+import {ModifyCouponData, NewCouponData} from "../../../api/coupons/CouponsApi";
+
 
 /* Coupon info Props
  *   coupon: The coupon component
@@ -19,21 +27,23 @@ import { Coupon, UserCoupon } from '../../../entities';
 export interface Props {
   coupon: Coupon;
   userCoupon?: UserCoupon;
+  onUpdateUserCoupon: (uc: UserCoupon, action: string) => void;
 }
 
 /**
  * The react coupon info component.
  */
-const CouponInfo: FunctionComponent<Props> = ({ coupon, userCoupon }) => {
-  const { title, end, offer, code } = coupon.attributes;
-  const date = moment(end).format('L');
-  const iconInteraction = userCoupon
-    ? require('../../../assets/icons/trash.png')
-    : require('../../../assets/icons/plus.png');
+
+const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userCoupon}) => {
+  const {title, end, offer, code} = coupon.attributes;
+  const date = moment(end).locale('fr').format('L');
+  const iconInteraction = (userCoupon && parseInt(userCoupon.attributes.favored) === 1) ? Images.heartFull : Images.heartEmpty;
+
 
   const styles = StyleSheet.create({
     title: {
-      fontSize: 30,
+      fontSize: 20,
+      overflow: 'hidden'
     },
     offer: {
       color: '#ff0000',
@@ -70,12 +80,22 @@ const CouponInfo: FunctionComponent<Props> = ({ coupon, userCoupon }) => {
     },
   });
 
-  const handleCoupon = (e: GestureResponderEvent) => {
+  const handleCoupon = async(e: GestureResponderEvent) => {
     e.stopPropagation();
+    const activeUser = await retrieveActiveUser();
     if (userCoupon) {
-      // Remove user coupon
+      const data: ModifyCouponData = { couponId: coupon.id,
+        userId: activeUser.id,
+        userToken: activeUser.attributes.token,
+        userCouponId: userCoupon.id,
+        used: userCoupon.attributes.used.toString(),
+        favored: userCoupon.attributes.favored === "1" ? "0" : "1"}
+      const updatedUserCoupon = await Api.CouponsApi.put(data);
+      onUpdateUserCoupon(updatedUserCoupon, 'add');
     } else {
-      // Add user Coupon
+      const data: NewCouponData = { couponId: coupon.id, userId: activeUser.id, userToken: activeUser.attributes.token}
+      const newUserCoupon = await Api.CouponsApi.post(data);
+      onUpdateUserCoupon(newUserCoupon, 'add');
     }
   };
   const copyCode = (e: GestureResponderEvent) => {
@@ -99,11 +119,9 @@ const CouponInfo: FunctionComponent<Props> = ({ coupon, userCoupon }) => {
       </View>
       <View style={{ ...styles.row, justifyContent: 'space-between' }}>
         <Text style={styles.conditions}>*Voir conditions</Text>
-        <TouchableHighlight onPress={(e) => handleCoupon(e)}>
           <TouchableOpacity activeOpacity={1} onPress={(e) => handleCoupon(e)}>
             <Image source={iconInteraction} style={styles.iconSmall} />
           </TouchableOpacity>
-        </TouchableHighlight>
       </View>
     </View>
   );

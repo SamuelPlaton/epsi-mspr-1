@@ -1,8 +1,9 @@
-import React, { FunctionComponent } from 'react';
-import { Image, ImageProps, StyleSheet, Text } from 'react-native';
+import React, {FunctionComponent} from 'react';
+import {default as BaseCard} from "../base-card/BaseCard";
+import {Image, ImageProps, StyleSheet, Text} from "react-native";
 import { useNavigation } from '@react-navigation/native';
-import { default as BaseCard } from '../base-card/BaseCard';
-import { genericStyles } from '../../../styles';
+import {genericStyles} from "../../../styles";
+
 
 export interface Props {
   icon: ImageProps;
@@ -13,7 +14,11 @@ export interface Props {
 /**
  * The react coupon link component.
  */
-const LinkCard: FunctionComponent<Props> = ({ icon, text, link }) => {
+
+const LinkCard: FunctionComponent<Props> = ({icon, text, link}) => {
+
+  const nav = useNavigation();
+
   const styles = StyleSheet.create({
     card: {
       padding: 10,
@@ -24,16 +29,19 @@ const LinkCard: FunctionComponent<Props> = ({ icon, text, link }) => {
       height: 120,
     },
     text: {
-      textAlign: 'center',
-      fontSize: 20,
-    },
+
+      textAlign: "center",
+      fontSize: 15,
+      overflow: 'hidden',
+    }
+
   });
   const nav = useNavigation();
 
   const redirect = () => {
-    nav.navigate(link);
-    console.log(link);
-  };
+
+    nav.navigate(link)
+  }
 
   return (
     <BaseCard bgColor='#FEFEFE' style={styles.card} onClick={redirect}>

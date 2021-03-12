@@ -41,28 +41,30 @@ export const routes = express.Router();
  *
  */
 routes.put('/stores', async (request, response) => {
-    const {userId, stores, userToken} = request.body.data;
+    const data = request.body.data;
 
-    if (!stores || !userToken) {
-        response.send('Bad parameters');
-        response.status(400).end();
+    if (!data || !data.stores || !data.userId ||  !data.userToken) {
+        response.status(400);
+        response.send('-1').end();
         return;
     }
 
-    const properToken = await checkToken(userToken, userId);
+    const properToken = await checkToken(data.userToken, data.userId);
     if(!properToken){
-        response.send('Wrong token');
-        response.status(403).end();
+        response.status(403);
+        response.send('-2').end();
         return;
     }
 
     // delete users sectors
-    await sqlInstance.request('DELETE FROM USER_STORE WHERE USER = ?', [userId]);
+    await sqlInstance.request('DELETE FROM USER_STORE WHERE USER = ?', [data.userId]);
 
     // add users sectors
-    stores.map(store => {
-        sqlInstance.request('INSERT INTO USER_STORE(USER, STORE) VALUES (?, ?)', [userId, store]);
+    data.stores.map(store => {
+        sqlInstance.request('INSERT INTO USER_STORE(USER, STORE) VALUES (?, ?)', [data.userId, store]);
     });
-    response.send('');
-    response.status(200).end();
+    response.status(200);
+    response.send(data.stores.map(store => {
+        return {user: data.userId, store: store}
+    })).end();
 });
