@@ -68,6 +68,7 @@ routes.get('/coupons/:id', async (request, response) => {
                 return response.map(r => r['ID']);
             });
 
+            userCouponsIds.push('X');
             query.push('SELECT * FROM USER_COUPON WHERE ID IN (?)');
             queryParams.push(userCouponsIds);
             acc += 1;
@@ -195,12 +196,12 @@ routes.get('/coupons/recommended/:idUser', async (request, response) => {
 
     couponIds.push('X');
     // Retrieve the coupons already in user coupons and not used
-    const userCouponIds = await sqlInstance.request('SELECT COUPON FROM USER_COUPON WHERE USER = ? AND USED = 1', [request.params.idUser]).then(response => {
+    const userCouponIds = await sqlInstance.request('SELECT COUPON FROM USER_COUPON WHERE USER = ? AND USED > 0', [request.params.idUser]).then(response => {
         return response.map(e => e['COUPON']);
     });
 
     // Retrieve user affiliated coupons
-    const userCoupons = await sqlInstance.request('SELECT * FROM USER_COUPON WHERE USER = ? AND USED = 0', [request.params.idUser]).then(response => {
+    const userCoupons = await sqlInstance.request('SELECT * FROM USER_COUPON WHERE USER = ?', [request.params.idUser]).then(response => {
         return response;
     });
 

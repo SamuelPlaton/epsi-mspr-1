@@ -6,6 +6,7 @@ import {genericStyles} from "../../styles";
 import {retrieveActiveUser} from "../../store/UserManager";
 import { Table, Row, Rows } from 'react-native-table-component';
 import moment from "moment";
+import {orderBy} from 'lodash';
 
 /**
  * The react coupons historic page.
@@ -41,7 +42,9 @@ const HistoricPage: FunctionComponent = () => {
     const data = await Api.UsersApi.get(activeUser.id);
     setCoupons(data.coupons);
     setUserCoupons(data.userCoupons);
-    setHistoriqueCoupons(data.historiqueCoupons);
+    setHistoriqueCoupons(orderBy(data.historiqueCoupons, function(u){
+      return new Date(u.attributes.usedTime);
+    }, "desc"));
   }
 
   useEffect(() => {

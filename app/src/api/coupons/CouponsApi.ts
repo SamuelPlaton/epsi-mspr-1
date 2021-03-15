@@ -42,7 +42,7 @@ const CouponsApi = {
     return {
       coupon: setCoupon(response.data.coupon[0]),
       historiqueCoupons: response.data.historiqueCoupons.map(hc => setHistoriqueCoupon(hc)),
-      userCoupon: setUserCoupon(response.data.userCoupons[0]),
+      userCoupon: response.data.userCoupons.length > 0 ? setUserCoupon(response.data.userCoupons[0]) : undefined,
       stores: response.data.stores.map(s => setStore(s)),
   };
   }).catch(err => err),
