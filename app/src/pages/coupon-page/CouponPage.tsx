@@ -4,7 +4,7 @@ import React, {FunctionComponent, useEffect, useState} from 'react';
 import {ScrollView, View, Text} from 'react-native';
 import {orderBy} from 'lodash';
 import {retrieveActiveUser} from "../../store/UserManager";
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {CouponDetail} from "../../components/detail";
 import {genericStyles} from "../../styles";
 import {UseCouponForm} from "../../components/form";
@@ -14,9 +14,7 @@ import {UseCouponForm} from "../../components/form";
  */
 
 const CouponPage: FunctionComponent = () => {
-  const nav = useNavigation();
   const route = useRoute();
-
 
   const couponId = route.params['id'];
 
@@ -44,7 +42,6 @@ const CouponPage: FunctionComponent = () => {
     setUserCoupon(data.userCoupon);
     setStores(data.stores);
     setCoupon(data.coupon);
-    console.log(data.userCoupon);
   }
 
   useEffect(() => {
