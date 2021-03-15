@@ -7,6 +7,11 @@ const genericStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  center: {
+    width: '80%',
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  },
   titleText: {
     fontSize: 30,
     marginBottom: 20,

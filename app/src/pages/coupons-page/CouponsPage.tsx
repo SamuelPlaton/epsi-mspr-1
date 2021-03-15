@@ -2,7 +2,7 @@ import Api from "../../api/Api";
 import {Coupon, User, UserCoupon} from "../../entities";
 import {CouponList} from "../../components";
 import React, {FunctionComponent, useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {genericStyles} from "../../styles";
 import {retrieveActiveUser} from "../../store/UserManager";
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -13,7 +13,14 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 
 const CouponsPage: FunctionComponent = () => {
   const nav = useNavigation();
-  const route = useRoute();
+
+  // Allow the page to refresh his datas even after a goBack
+  useEffect(() => {
+    nav.addListener('focus', async () => {
+      setCoupons(undefined);
+      await getData();
+    });
+  }, []);
 
   const [coupons, setCoupons] = useState<Array<Coupon>>(undefined);
   const [userCoupons, setUserCoupons] = useState<Array<UserCoupon>>(undefined);
@@ -46,14 +53,6 @@ const CouponsPage: FunctionComponent = () => {
     getData();
   }, [activeUser]);
 
-  const styles = StyleSheet.create({
-    center: {
-      width: '80%',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-  });
-
   return (
     <ScrollView>
       {coupons && coupons.length > 0 ? (
@@ -64,10 +63,9 @@ const CouponsPage: FunctionComponent = () => {
           </Text>
           <CouponList coupons={coupons} userCoupons={userCoupons} />
         </View>
-
-      ) : (<Text style={{...genericStyles.subtitleText, ...styles.center}}>Vous n'avez pas de coupons favoris</Text>)}
+      ) : (<Text style={{...genericStyles.subtitleText, ...genericStyles.center}}>Vous n'avez pas de coupons favoris</Text>)}
       <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Historic')}>
-        <Text style={{...styles.center, color: '#AAAAAA'}}>Voir mon historique</Text>
+        <Text style={{...genericStyles.center, color: '#AAAAAA'}}>Voir mon historique</Text>
       </TouchableOpacity>
     </ScrollView>
   );

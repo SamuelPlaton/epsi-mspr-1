@@ -16,14 +16,13 @@ export const setStore = (store: Object): Store => {
 }
 
 const StoresApi = {
-  get: (id: string, includes?: Array<string>) => client.get(`/users/${id}`, setIncludes(includes)).then(response => {
+  get: (id: string, includes?: Array<string>) => client.get(`/stores/${id}`, setIncludes(includes)).then(response => {
     return setStore(response.data);
   }),
-  list: (ids?: Array<string>) => client.get(ids ? '/users/selected' : '/users', {data: ids}).then(response => {
+  list: (ids?: Array<string>) => client.get(ids ? `/stores/selected?ids=${ids.join(',')}` : '/stores').then(response => {
     return response.data.map(store => setStore(store));
   }),
   put: (userId: string, stores: Array<string>, token: string) => client.put('/stores', {data: { userId, stores, token }}).then(response => {
-    console.log(response);
     return response;
   }),
 }
