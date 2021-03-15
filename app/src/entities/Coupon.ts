@@ -9,7 +9,7 @@ export interface Coupon {
     icon?: string;
     description?: string;
     maxLimit: number;
-    unique: boolean;
+    unique: number;
     code: string;
     valid: number;
   };

@@ -24,14 +24,17 @@ const HomePage: FunctionComponent = () => {
     });
   }, []);
 
+
+
   const route = useRoute();
-  const [refresh, setRefresh] = useState<boolean>(true);
   const [coupons, setCoupons] = useState<Array<Coupon>>(undefined);
   const [userCoupons, setUserCoupons] = useState<Array<UserCoupon>>(undefined);
   // Retrieve our active user
   const [activeUser, setActiveUser] = useState<User | undefined>(route.params ? route.params as User : undefined);
 
   const getData = async () => {
+    //await AsyncStorage.removeItem('activeUser'); // Disconnect
+
     if(!activeUser){
       retrieveActiveUser().then(response => {
         if(response){
@@ -43,12 +46,11 @@ const HomePage: FunctionComponent = () => {
     if(!activeUser || coupons){
       return;
     }
-    //await AsyncStorage.removeItem('activeUser'); // Disconnect
+
     // retrieve recommended coupons
     const retrievedCoupons = await Api.CouponsApi.listRecommended(activeUser.id).then(response => response);
     setCoupons(retrievedCoupons.coupons);
     setUserCoupons(retrievedCoupons.userCoupons);
-    setRefresh(false);
   }
 
   useEffect(() => {
