@@ -9,7 +9,7 @@ export default () => describe('PUT', function () {
                 .send({ data: {
                         userId: "1",
                         userToken: "1",
-                        stores: ["1", "2"]
+                        stores: ["1supertest"]
                     }
                 })
                 .expect(200,done)
@@ -26,7 +26,7 @@ export default () => describe('PUT', function () {
                 .send({ data: {
                         userId: "1",
                         userToken: "2",
-                        stores: ["1"]
+                        stores: ["1supertest"]
                     }
                 })
                 .expect(403,done)

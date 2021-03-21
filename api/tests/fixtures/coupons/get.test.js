@@ -10,7 +10,7 @@ export default () => describe('GET', function (){
                 .then(response => {
                 assert(response.body.coupon[0]['id'] === '1supertest', done);
                 assert(response.body.stores.length === 1, done);
-                assert(response.body.userCoupons.length === 0, done);
+                assert(response.body.userCoupons.length === 1, done);
                 assert(response.body.historiqueCoupons.length === 0, done);
                 done();
             }).catch(err => done(err))
@@ -32,7 +32,7 @@ export default () => describe('GET', function (){
             supertest(app)
                 .get('/coupons?ids=1supertest')
                 .then(response => {
-                    assert(response.body.length, 0)
+                    assert(response.body.length === 1, done);
                     done();
                 })
                 .catch(err => done(err))
@@ -41,5 +41,14 @@ export default () => describe('GET', function (){
             supertest(app)
                 .get('/coupons').expect(400, done)
         });
-    })
+    });
+    describe('/coupons/recommended/1', function (){
+        it('retrieve recommended coupons of a user', function(done) {
+            supertest(app)
+                .get('/coupons/recommended/1').expect(function(res) {
+                    // Don't retrieve invalid or unique and already used coupons
+                    assert(res.body.coupons.length === 1, true);
+            }).end(done);
+        });
+    });
 })

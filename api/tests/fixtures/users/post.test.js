@@ -10,7 +10,7 @@ export default () => describe('POST', function () {
                     lastName: 'Doe',
                     email: 'john.doe@supertest.com',
                     password: 'password',
-                    birthday: new Date()
+                    birthday: '2000-03-08 00:00:00'
                 }
             }).expect(201, done);
         });
@@ -24,7 +24,7 @@ export default () => describe('POST', function () {
                     lastName: 'Doe',
                     email: 'john.doe2@supertest.com',
                     password: 'password',
-                    birthday: new Date()
+                    birthday: '2000-03-08 00:00:00'
                 }
             }).expect(403, done);
         });

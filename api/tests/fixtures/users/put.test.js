@@ -1,5 +1,6 @@
 import request from 'supertest';
 import {app} from '../../../index.js';
+import cryptoJS from "crypto-js";
 
 export default () => describe('PUT', function () {
     describe('/users/{id}', function () {
@@ -49,7 +50,18 @@ export default () => describe('PUT', function () {
                         token: "U2FsdGVkX1TnCFvbVjCqQM="
                     }
                 })
-                .expect(403,done)
+                .expect('-2',done)
+        });
+        it('bad parameters', function (done) {
+            request(app)
+                .put('/users/password/2')
+                .send({
+                    data: {
+                        previousPassword: "12345",
+                        token: "U2FsdGVkX1TnCFvbVjCqQM="
+                    }
+                })
+                .expect('-1',done)
         });
     })
 })

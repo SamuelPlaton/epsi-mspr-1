@@ -16,12 +16,14 @@ export default () => describe('GET', function (){
         });
     })
     describe('/users/:id', function (){
-        describe('should return user', function (){
+        describe('should return user and his inclusions', function (){
             it('responds with param', function(done) {
                 supertest(app)
-                    .get('/users/1')
+                    .get('/users/1?stores=true&coupons=true')
                     .then(response => {
-                        assert(response.body.user.email, 'john.doe2@supertest.com')
+                        assert(response.body.user.email, 'john.doe2@supertest.com');
+                        assert(response.body.stores.length, 1);
+                        assert(response.body.coupons.length, 1);
                         done();
                     })
                     .catch(err => done(err))

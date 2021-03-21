@@ -6,7 +6,7 @@ import cryptoJS from "crypto-js";
 before(function (done) {
 
     // Increase the Mocha timeout so that Sails has enough time to lift, even if you have a bunch of assets.
-    this.timeout(5000);
+    this.timeout(10000);
 
     sails.lift({
         // Your Sails app's configuration files will be loaded automatically,
@@ -22,22 +22,25 @@ before(function (done) {
             return done(err);
         }
 
-        const now = new Date();
-        // Load our fixtures
+        const future = '2030-04-08 00:00:00';
+        const past = '2021-02-08 00:00:00';
+        // Create 3 users
         sqlInstance.request('INSERT INTO USER(ID, FIRSTNAME, LASTNAME, EMAIL, TOKEN, BIRTHDAY) VALUES(?, ?, ?, ?, ?, ?)',
-            ['1', 'John', 'Doe', 'john.doe2@supertest.com', '1', now]);
-        const token = cryptoJS.AES.encrypt('12345', '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString(); // U2FsdGVkX1+ODxnFHJw5uwmkxt7V/5cTnCFvbVjCqQM=
+            ['1', 'John', 'Doe', 'john.doe2@supertest.com', '1', '2000-03-08 00:00:00']);
+        const token = cryptoJS.AES.encrypt('12345', '22787802-a6e7-4c3d-8fc1-aab0ece1cb41').toString(); // U2FsdGVkX19kotqohmawJBsCw0g0uDipZtdtYCYb8N8=
         sqlInstance.request('INSERT INTO USER(ID, FIRSTNAME, LASTNAME, EMAIL, TOKEN, BIRTHDAY) VALUES(?, ?, ?, ?, ?, ?)',
-            ['2', 'John', 'Doe', 'john.doe3@supertest.com', token, now]);
+            ['2', 'John', 'Doe', 'john.doe3@supertest.com', token, '2000-03-08 00:00:00']);
         sqlInstance.request('INSERT INTO USER(ID, FIRSTNAME, LASTNAME, EMAIL, TOKEN, BIRTHDAY) VALUES(?, ?, ?, ?, ?, ?)',
-            ['3', 'John', 'Doe', 'john.doe4@supertest.com', '3', now]);
+            ['3', 'John', 'Doe', 'john.doe4@supertest.com', '3', '2000-03-08 00:00:00']);
 
-        const future = now;
-        future.setDate(future.getDate()+5);
+        // Create our store
+        sqlInstance.request('INSERT INTO STORE(ID, LOCALIZATION, NAME) VALUES(?, ?, ?)',
+            ['1supertest', '0', 'supertest_store']);
+        // Create a unique and valid coupon
         sqlInstance.request('INSERT INTO COUPON(ID, START, END, OFFER, DESCRIPTION, MAX_LIMIT, `UNIQUE`, CODE, TITLE, `VALID`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [
                 '1supertest',
-                now,
+                past,
                 future,
                 '-50%',
                 'Description',
@@ -47,20 +50,58 @@ before(function (done) {
                 'Title',
                 1
             ]);
+        // Create a non unique and valid coupon
+        sqlInstance.request('INSERT INTO COUPON(ID, START, END, OFFER, DESCRIPTION, MAX_LIMIT, `UNIQUE`, CODE, TITLE, `VALID`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+                '2supertest',
+                past,
+                future,
+                '-50%',
+                'Description',
+                500,
+                0,
+                'SUPERTEST2',
+                'Title',
+                1
+            ]);
+        // Create a invalid coupon
+        sqlInstance.request('INSERT INTO COUPON(ID, START, END, OFFER, DESCRIPTION, MAX_LIMIT, `UNIQUE`, CODE, TITLE, `VALID`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+                '3supertest',
+                past,
+                future,
+                '-50%',
+                'Description',
+                500,
+                1,
+                'SUPERTEST3',
+                'Title',
+                0
+            ]);
+        // Create affiliations
         sqlInstance.request('INSERT INTO COUPON_STORE(COUPON, STORE) VALUES(?, ?)',
-            ['1supertest', '1']);
+            ['1supertest', '1supertest']);
+        sqlInstance.request('INSERT INTO COUPON_STORE(COUPON, STORE) VALUES(?, ?)',
+            ['2supertest', '1supertest']);
+        sqlInstance.request('INSERT INTO USER_COUPON(ID, USER, COUPON, USED, FAVORED) VALUES(?, ?, ?, ?, ?)',
+            ['1supertest', '1', '1supertest', '1', '1']);
+       sqlInstance.request('INSERT INTO USER_STORE(USER, STORE) VALUES(?, ?)',
+            ['1', '1supertest']);
         return done();
     });
 });
 
 // After all tests have finished...
-after(function (done) {
+after(async function () {
+    const userId = await sqlInstance.request('SELECT id FROM USER WHERE EMAIL = ?', ['john.doe@supertest.com']).then(res => res[0]['id']);
     // Clean our fixtures
-    sqlInstance.request('DELETE FROM USER_STORE WHERE USER = 1').then(done);
-    sqlInstance.request('DELETE FROM COUPON_STORE WHERE COUPON = "1supertest"').then(done);
-    sqlInstance.request('DELETE FROM USER WHERE ID IN (1,2,3)').then(done);
-    sqlInstance.request('DELETE FROM USER WHERE EMAIL = "john.doe4@supertest.com"').then(done);
-    sqlInstance.request('DELETE FROM COUPON WHERE ID IN (1supertest)').then(done);
-    sails.lower(done);
+    await sqlInstance.request('DELETE FROM COUPON_STORE WHERE STORE IN ("1supertest")');
+    await sqlInstance.request('DELETE FROM USER_STORE WHERE USER IN ("1","2","3",?)', [userId]);
+    await sqlInstance.request('DELETE FROM USER_COUPON WHERE COUPON IN ("1supertest")');
+    await sqlInstance.request('DELETE FROM USER WHERE ID IN ("1","2","3",?)', [userId]);
+    await sqlInstance.request('DELETE FROM STORE WHERE ID = "1supertest"');
+    await sqlInstance.request('DELETE FROM COUPON WHERE ID IN ("1supertest","2supertest","3supertest")');
+
+    sails.lower();
 
 });
