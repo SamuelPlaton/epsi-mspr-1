@@ -114,6 +114,7 @@ after(async function () {
     await sqlInstance.request('DELETE FROM COUPON_STORE WHERE STORE IN ("1supertest")');
     await sqlInstance.request('DELETE FROM USER_STORE WHERE USER IN ("1","2","3",?)', [userId]);
     await sqlInstance.request('DELETE FROM USER_COUPON WHERE USER IN ("1","2","3")');
+    await sqlInstance.request('DELETE FROM HISTORIQUE_COUPON WHERE USER_COUPON IN ("1supertest")');
     await sqlInstance.request('DELETE FROM USER WHERE ID IN ("1","2","3",?)', [userId]);
     await sqlInstance.request('DELETE FROM STORE WHERE ID = "1supertest"');
     await sqlInstance.request('DELETE FROM COUPON WHERE ID IN ("1supertest","2supertest","3supertest","4supertest")');
