@@ -30,16 +30,6 @@ export default () => describe('POST', function (){
                     }})
                 .expect('-10', done);
         });
-        it('unique and used coupon', function(done) {
-            supertest(app)
-                .post('/coupons')
-                .send({ data: {
-                        userId: '1',
-                        userToken: '1',
-                        couponId: '1supertest'
-                    }})
-                .expect('-11', done);
-        });
         it('user_coupon already exist', function(done) {
             supertest(app)
                 .post('/coupons')
@@ -48,7 +38,7 @@ export default () => describe('POST', function (){
                         userToken: '1',
                         couponId: '4supertest'
                     }})
-                .expect('-12', done);
+                .expect('-11', done);
         });
         it('user_coupon created', function(done) {
             supertest(app)

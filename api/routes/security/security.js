@@ -7,7 +7,7 @@ export async function checkToken(token, id) {
 }
 
 export async function checkUserCoupon(idUser, idCoupon) {
-  return await sqlInstance.request('SELECT * FROM USER_COUPON WHERE USER = ? AND COUPON = ? AND USED > 0', [idUser, idCoupon]).then(result => {
+  return await sqlInstance.request('SELECT * FROM USER_COUPON WHERE USER = ? AND COUPON = ?', [idUser, idCoupon]).then(result => {
     return result.length > 0;
   });
 }
