@@ -94,7 +94,7 @@ routes.get('/coupons/:id', async (request, response) => {
 /**
  * @swagger
  *
- * /coupons/code/{id}:
+ * /coupons/code/{code}:
  *   get:
  *     tags:
  *       - coupons

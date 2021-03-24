@@ -38,12 +38,14 @@ const RegisterForm: FunctionComponent = () => {
       birthday: date,
     }
     const data = await Api.UsersApi.post(userData);
-    if(data === -1){
+    console.log(data);
+    if(data === -20){
       Alert.alert('Cet email est déjà pris');
       return;
     }
-    await storeActiveUser(data as User);
-    nav.navigate('Home', data);
+    await storeActiveUser(data as User).then(() => {
+      nav.navigate('Home', data);
+    });
   }
 
     return (

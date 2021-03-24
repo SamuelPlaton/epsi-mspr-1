@@ -1,6 +1,6 @@
 import {Coupon, HistoriqueCoupon, User, UserCoupon} from "../../../entities";
 import React, {FunctionComponent} from 'react';
-import {Button, Text, View} from 'react-native';
+import { Alert, Button, Text, View } from 'react-native';
 import {genericStyles} from "../../../styles";
 import 'moment/locale/fr';
 import {ModifyCouponData, NewCouponData} from "../../../api/coupons/CouponsApi";
@@ -67,6 +67,16 @@ const UseCouponForm: FunctionComponent<Props> = ({activeUser, coupon, historique
         }
       }
       const updatedUserCoupon = await Api.CouponsApi.put(data);
+      if(updatedUserCoupon === -14){
+        Alert.alert(`Ce coupon a atteint sa limite d'utilisation`)
+        return;
+      }else if(updatedUserCoupon === -13){
+        Alert.alert(`Vous avez déjà utilisé ce coupon`)
+        return;
+      }else if(updatedUserCoupon === -10){
+        Alert.alert(`Ce coupon n'est plus valide`)
+        return;
+      }
       onUpdateUserCoupon(updatedUserCoupon, tempHistoric);
     } else {
       const data: NewCouponData = {couponId: coupon.id, userId: activeUser.id, userToken: activeUser.attributes.token}
@@ -88,6 +98,16 @@ const UseCouponForm: FunctionComponent<Props> = ({activeUser, coupon, historique
         relationships: {
           userCoupon: newUserCoupon.id
         }
+      }
+      if(updatedUserCoupon === -14){
+        Alert.alert(`Ce coupon a atteint sa limite d'utilisation`)
+        return;
+      }else if(updatedUserCoupon === -13){
+        Alert.alert(`Vous avez déjà utilisé ce coupon`)
+        return;
+      }else if(updatedUserCoupon === -10){
+        Alert.alert(`Ce coupon n'est plus valide`)
+        return;
       }
       onUpdateUserCoupon(updatedUserCoupon, tempHistoric);
     }

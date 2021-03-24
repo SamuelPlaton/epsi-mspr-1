@@ -128,8 +128,8 @@ routes.post('/users', async (request, response) => {
 routes.post('/users/login', async (request, response) => {
     const data = request.body.data;
     if (!data || !data.email || !data.password) {
-        response.send('-1');
-        response.status(400).end();
+        response.status(400);
+        response.send('-1').end();
         return;
     }
     // Retrieve token if the email is found

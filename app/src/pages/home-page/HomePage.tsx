@@ -24,8 +24,6 @@ const HomePage: FunctionComponent = () => {
     });
   }, []);
 
-
-
   const route = useRoute();
   const [coupons, setCoupons] = useState<Array<Coupon>>(undefined);
   const [userCoupons, setUserCoupons] = useState<Array<UserCoupon>>(undefined);

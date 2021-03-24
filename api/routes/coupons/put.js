@@ -1,5 +1,11 @@
 import express from 'express';
-import {checkToken} from "../security/security.js";
+import {
+    checkMaxLimitCoupon,
+    checkToken,
+    checkSumCoupon,
+    checkUsedCoupon,
+    checkUniqueCoupon
+} from "../security/security.js";
 import {sqlInstance} from "../../index.js";
 import {v4 as uuidv4} from 'uuid';
 
@@ -66,8 +72,35 @@ routes.put('/coupons', async (request, response) => {
         return;
     }
 
-    // If the coupon is used
+    // If we want to use the coupon
     if(data.action && data.action === "use"){
+        // Check if coupon is valid
+        const couponValid = await sqlInstance.request('SELECT * FROM COUPON WHERE ID = ? AND VALID = 1', [data.couponId]).then(result => {
+            return result.length > 0;
+        });
+
+        if (!couponValid) {
+            response.status(403);
+            response.send('-10').end(); // Invalid coupon
+            return;
+        }
+
+        const usedCoupon = await checkUsedCoupon(data.userId, data.couponId);
+        const uniqueCoupon = await checkUniqueCoupon(data.couponId);
+        if (usedCoupon && uniqueCoupon) {
+            response.status(403);
+            response.send('-13').end(); // Coupon Already Used
+            return;
+        }
+
+        const maxLimitCoupon = await checkMaxLimitCoupon(data.couponId);
+        const totalUses = await checkSumCoupon(data.couponId);
+        if (totalUses >= maxLimitCoupon) {
+            response.status(403);
+            response.send('-14').end(); // Max uses reached
+            return;
+        }
+
         await sqlInstance.request('INSERT INTO HISTORIQUE_COUPON(ID, USER_COUPON) VALUES(?, ?)', [uuidv4(), data.userCouponId]);
     }
 
