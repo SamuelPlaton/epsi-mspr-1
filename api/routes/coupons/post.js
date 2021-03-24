@@ -1,5 +1,5 @@
 import express from 'express';
-import {checkToken, checkUniqueCoupon, checkUserCoupon} from "../security/security.js";
+import {checkToken, checkUserCoupon} from "../security/security.js";
 import {sqlInstance} from "../../index.js";
 import {v4 as uuidv4} from 'uuid';
 

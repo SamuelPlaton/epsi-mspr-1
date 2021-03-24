@@ -62,9 +62,16 @@ const CouponsApi = {
   }),
   post: (data: NewCouponData) => client.post('/coupons', {data: {...data} }).then(response => {
     return setUserCoupon(response.data);
+  }).catch(err => {
+    console.log(err.response.data);
+    return err.response.data
   }),
+
   put: (data: ModifyCouponData) => client.put('/coupons', {data: {...data}}).then(response => {
     return setUserCoupon(response.data);
+  }).catch(err => {
+    console.log(err.response.data);
+    return err.response.data
   }),
 }
 

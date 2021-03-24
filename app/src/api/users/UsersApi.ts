@@ -1,5 +1,4 @@
 import { client } from '../client';
-import {setIncludes} from "../helpers";
 import {HistoriqueCoupon, User, UserCoupon} from "../../entities";
 import {setCoupon} from "../coupons/CouponsApi";
 import {setStore} from "../stores/StoresApi";
@@ -67,7 +66,7 @@ export const setHistoriqueCoupon = (hc: Object): HistoriqueCoupon => {
 const UsersApi = {
   get: (id: string) => client.get(`/users/${id}?coupons=true&stores=true`).then(response => {
     return {
-      user: setUser(response.data.user[0]),
+      user: setUser(response.data.user),
       coupons: response.data.coupons.map(c => setCoupon(c)),
       userCoupons: response.data.userCoupons.map(uc => setUserCoupon(uc)),
       stores: response.data.stores.map(s => setStore(s)),
@@ -78,21 +77,17 @@ const UsersApi = {
     return response.data.map(user => setUser(user));
   }),
   post: (userData: NewUserData) => client.post('/users', {data: userData}).then(response => {
-    if(response.data === -20){
-      return -1 // Email already exist
-    }else{
-      return setUser(response.data);
-    }
-
+    return setUser(response.data);
+  }).catch(err => {
+    console.log(err.response.data);
+    return err.response.data;
   }),
+
   login: (email: string, password: string) => client.post('/users/login', {data: { email, password }}).then(response => {
-    if(response.data === -21){
-      return -1; // Wrong email
-    }else if(response.data === -22){
-      return -2; // Wrong password
-    }else{
-      return setUser(response.data);
-    }
+    return setUser(response.data);
+  }).catch(err => {
+    console.log(err.response.data);
+    return err.response.data;
   }),
 
   modify: (id: string, userData: ModifyUserData) => client.put(`/users/${id}`, {data: userData}).then(response => {

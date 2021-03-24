@@ -17,10 +17,10 @@ const LoginForm: FunctionComponent = () => {
 
     const handleLogin = async () => {
       const data = await Api.UsersApi.login(email, password);
-      if(data === -1){
+      if(data === -21){
         Alert.alert(`Erreur dans l'email`);
         return;
-      }else if(data === -2){
+      }else if(data === -22){
         Alert.alert(`Erreur dans le mot de passe`);
         return;
       }

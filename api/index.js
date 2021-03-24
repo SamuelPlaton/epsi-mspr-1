@@ -47,6 +47,6 @@ app.use('/', getUserRouter);
 app.use('/', deleteUserRouter);
 app.use('/', putUserRouter);
 
-// Make our app listen to port 3000
-app.listen(3000);
+// Make our app listen to port 3010
+app.listen(3010);
 

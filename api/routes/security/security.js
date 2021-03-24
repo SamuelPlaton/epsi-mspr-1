@@ -12,6 +12,11 @@ export async function checkUserCoupon(idUser, idCoupon) {
   });
 }
 
+export async function checkUsedCoupon(idUser, idCoupon) {
+  return await sqlInstance.request('SELECT * FROM USER_COUPON WHERE USER = ? AND COUPON = ? AND USED > 0', [idUser, idCoupon]).then(result => {
+    return result.length > 0;
+  });
+}
 export async function checkUniqueCoupon(idCoupon) {
   return await sqlInstance.request('SELECT * FROM COUPON C WHERE C.ID = ? AND C.UNIQUE = 1', [idCoupon]).then(result => {
     return result.length > 0;
@@ -24,8 +29,8 @@ export async function checkMaxLimitCoupon(idCoupon) {
   });
 }
 
-export async function checkUsedCoupon(idCoupon) {
-  return await sqlInstance.request('SELECT COUNT(*) AS TOTAL FROM USER_COUPON WHERE COUPON = ? AND USED = 1', [idCoupon]).then(result => {
+export async function checkSumCoupon(idCoupon) {
+  return await sqlInstance.request('SELECT SUM(USED) AS TOTAL FROM USER_COUPON WHERE COUPON = ?', [idCoupon]).then(result => {
     return result[0]['TOTAL'];
   });
 }

@@ -39,10 +39,12 @@ const CouponDetail: FunctionComponent<Props> = ({activeUser, coupon, onUpdateUse
         used: userCoupon.attributes.used.toString(),
         favored: userCoupon.attributes.favored === "1" ? "0" : "1"}
       const updatedUserCoupon = await Api.CouponsApi.put(data);
+      console.log(updatedUserCoupon);
       onUpdateUserCoupon(updatedUserCoupon);
     } else {
       const data: NewCouponData = { couponId: coupon.id, userId: activeUser.id, userToken: activeUser.attributes.token}
       const newUserCoupon = await Api.CouponsApi.post(data);
+      console.log(newUserCoupon);
       onUpdateUserCoupon(newUserCoupon);
     }
   }

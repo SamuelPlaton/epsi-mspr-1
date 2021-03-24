@@ -30,13 +30,41 @@ export default () => describe('PUT', function (){
                 .send({ data: {
                         userId: '1',
                         userToken: '1',
-                        userCouponId: '1supertest',
-                        couponId: '1supertest',
+                        userCouponId: '4supertest',
+                        couponId: '4supertest',
                         favored: 1,
                         used: 1,
                         action: "use"
                     }})
                 .expect(201, done);
+        });
+        it('use invalid coupon', function(done) {
+            supertest(app)
+                .put('/coupons')
+                .send({ data: {
+                        userId: '1',
+                        userToken: '1',
+                        userCouponId: '3supertest',
+                        couponId: '3supertest',
+                        favored: 1,
+                        used: 1,
+                        action: "use"
+                    }})
+                .expect('-10', done);
+        });
+        it('user_coupon already used', function(done) {
+            supertest(app)
+                .put('/coupons')
+                .send({ data: {
+                        userId: '1',
+                        userToken: '1',
+                        userCouponId: '5supertest',
+                        couponId: '5supertest',
+                        favored: 1,
+                        used: 2,
+                        action: "use"
+                    }})
+                .expect('-13', done);
         });
     });
 });
