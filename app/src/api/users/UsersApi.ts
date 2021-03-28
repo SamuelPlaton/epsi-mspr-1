@@ -1,7 +1,5 @@
 import { client } from '../client';
-import {HistoriqueCoupon, User, UserCoupon} from "../../entities";
-import {setCoupon} from "../coupons/CouponsApi";
-import {setStore} from "../stores/StoresApi";
+import { handleErrorMessages, setCoupon, setHistoriqueCoupon, setStore, setUser, setUserCoupon } from '../helpers';
 
 export interface NewUserData {
   firstName: string,
@@ -24,44 +22,6 @@ export interface PasswordData {
   token: string
 }
 
-export const setUser = (user: Object): User => {
-  return {id: user['id'], attributes: {
-      firstName: user['firstName'],
-      lastName: user['lastName'],
-      email: user['email'],
-      token: user['token'],
-      registerDate: user['register_date'],
-      birthday: user['birthday'],
-    },
-    relationships:{
-      stores: user['stores'],
-      coupons: user['coupons'],
-    }
-  };
-}
-
-export const setUserCoupon = (uc: Object): UserCoupon => {
-  return {id: uc['id'], attributes: {
-      used: uc['used'],
-      favored: uc['favored']
-    },
-    relationships:{
-      user: uc['user'],
-      coupon: uc['coupon'],
-    }
-  };
-}
-
-export const setHistoriqueCoupon = (hc: Object): HistoriqueCoupon => {
-  return {id: hc['id'], attributes: {
-      usedTime: hc['used_time'],
-    },
-    relationships:{
-      userCoupon: hc['user_coupon'],
-    }
-  };
-}
-
 
 const UsersApi = {
   get: (id: string) => client.get(`/users/${id}?coupons=true&stores=true`).then(response => {
@@ -72,30 +32,32 @@ const UsersApi = {
       stores: response.data.stores.map(s => setStore(s)),
       historiqueCoupons: response.data.historiqueCoupons.map(hc => setHistoriqueCoupon(hc)),
     }
-  }),
+  }).catch(err => handleErrorMessages(err.response.data)),
+
   list: (ids: Array<string>) => client.get('/users', {data: ids}).then(response => {
     return response.data.map(user => setUser(user));
-  }),
+  }).catch(err => handleErrorMessages(err.response.data)),
+
   post: (userData: NewUserData) => client.post('/users', {data: userData}).then(response => {
+    console.log('then');
     return setUser(response.data);
   }).catch(err => {
-    console.log(err.response.data);
-    return err.response.data;
+    console.log(err);
+    console.log('error');
+    return handleErrorMessages(err.response.data);
   }),
 
   login: (email: string, password: string) => client.post('/users/login', {data: { email, password }}).then(response => {
     return setUser(response.data);
-  }).catch(err => {
-    console.log(err.response.data);
-    return err.response.data;
-  }),
+  }).catch(err => handleErrorMessages(err.response.data)),
 
   modify: (id: string, userData: ModifyUserData) => client.put(`/users/${id}`, {data: userData}).then(response => {
     console.log(response);
-  }),
+  }).catch(err => handleErrorMessages(err.response.data)),
+
   modifyPassword: (id: string, passwordData: PasswordData) => client.put(`/users/password/${id}`, {data: passwordData}).then(response => {
     console.log(response);
-  })
+  }).catch(err => handleErrorMessages(err.response.data)),
 }
 
 export default UsersApi;

@@ -1,7 +1,7 @@
 import Api from "../../api/Api";
 import {Coupon, HistoriqueCoupon, Store, User, UserCoupon} from "../../entities";
 import React, {FunctionComponent, useEffect, useState} from 'react';
-import {ScrollView, View, Text} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {orderBy} from 'lodash';
 import {retrieveActiveUser} from "../../store/UserManager";
 import {useRoute} from '@react-navigation/native';
@@ -36,6 +36,12 @@ const CouponPage: FunctionComponent = () => {
       return;
     }
     const data = await Api.CouponsApi.get(couponId, activeUser.id, activeUser.attributes.token);
+
+    // Stop here if -1 is returned
+    if (typeof data === 'number') {
+      return;
+    }
+
     setHistoriqueCoupons(orderBy(data.historiqueCoupons, function (u) {
       return new Date(u.attributes.usedTime);
     }, "desc"));

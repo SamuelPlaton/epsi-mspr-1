@@ -40,6 +40,10 @@ const HistoricPage: FunctionComponent = () => {
       return;
     }
     const data = await Api.UsersApi.get(activeUser.id);
+    // Stop here if -1 is returned
+    if (typeof data === 'number') {
+      return;
+    }
     setCoupons(data.coupons);
     setUserCoupons(data.userCoupons);
     setHistoriqueCoupons(orderBy(data.historiqueCoupons, function(u){

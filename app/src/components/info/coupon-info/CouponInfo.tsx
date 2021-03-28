@@ -64,10 +64,18 @@ const CouponInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userC
         used: userCoupon.attributes.used.toString(),
         favored: userCoupon.attributes.favored === "1" ? "0" : "1"}
       const updatedUserCoupon = await Api.CouponsApi.put(data);
+      // Stop here if -1 is returned
+      if (typeof updatedUserCoupon === 'number') {
+        return;
+      }
       onUpdateUserCoupon(updatedUserCoupon);
     } else {
       const data: NewCouponData = { couponId: coupon.id, userId: activeUser.id, userToken: activeUser.attributes.token}
       const newUserCoupon = await Api.CouponsApi.post(data);
+      // Stop here if -1 is returned
+      if (typeof newUserCoupon === 'number') {
+        return;
+      }
       onUpdateUserCoupon(newUserCoupon);
     }
   }

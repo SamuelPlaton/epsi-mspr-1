@@ -47,6 +47,10 @@ const HomePage: FunctionComponent = () => {
 
     // retrieve recommended coupons
     const retrievedCoupons = await Api.CouponsApi.listRecommended(activeUser.id).then(response => response);
+    // Stop here if -1 is returned
+    if (typeof retrievedCoupons === 'number') {
+      return;
+    }
     setCoupons(retrievedCoupons.coupons);
     setUserCoupons(retrievedCoupons.userCoupons);
   }

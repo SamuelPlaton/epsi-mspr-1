@@ -1,12 +1,11 @@
 import {Coupon, HistoriqueCoupon, User, UserCoupon} from "../../../entities";
 import React, {FunctionComponent} from 'react';
-import { Alert, Button, Text, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import {genericStyles} from "../../../styles";
 import 'moment/locale/fr';
 import {ModifyCouponData, NewCouponData} from "../../../api/coupons/CouponsApi";
 import Api from "../../../api/Api";
 import QRCode from "react-native-qrcode-svg";
-import moment from "moment";
 
 /**
  * The react coupon detail.
@@ -67,20 +66,18 @@ const UseCouponForm: FunctionComponent<Props> = ({activeUser, coupon, historique
         }
       }
       const updatedUserCoupon = await Api.CouponsApi.put(data);
-      if(updatedUserCoupon === -14){
-        Alert.alert(`Ce coupon a atteint sa limite d'utilisation`)
-        return;
-      }else if(updatedUserCoupon === -13){
-        Alert.alert(`Vous avez déjà utilisé ce coupon`)
-        return;
-      }else if(updatedUserCoupon === -10){
-        Alert.alert(`Ce coupon n'est plus valide`)
+      // Stop here if -1 is returned
+      if (typeof updatedUserCoupon === 'number') {
         return;
       }
       onUpdateUserCoupon(updatedUserCoupon, tempHistoric);
     } else {
       const data: NewCouponData = {couponId: coupon.id, userId: activeUser.id, userToken: activeUser.attributes.token}
       const newUserCoupon = await Api.CouponsApi.post(data);
+      // Stop here if -1 is returned
+      if (typeof newUserCoupon === 'number') {
+        return;
+      }
       const modifyData: ModifyCouponData = {
         couponId: coupon.id,
         userId: activeUser.id,
@@ -99,16 +96,12 @@ const UseCouponForm: FunctionComponent<Props> = ({activeUser, coupon, historique
           userCoupon: newUserCoupon.id
         }
       }
-      if(updatedUserCoupon === -14){
-        Alert.alert(`Ce coupon a atteint sa limite d'utilisation`)
-        return;
-      }else if(updatedUserCoupon === -13){
-        Alert.alert(`Vous avez déjà utilisé ce coupon`)
-        return;
-      }else if(updatedUserCoupon === -10){
-        Alert.alert(`Ce coupon n'est plus valide`)
+
+      // Stop here if -1 is returned
+      if (typeof updatedUserCoupon === 'number') {
         return;
       }
+
       onUpdateUserCoupon(updatedUserCoupon, tempHistoric);
     }
   }
