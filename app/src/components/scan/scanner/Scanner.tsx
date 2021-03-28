@@ -19,7 +19,11 @@ const Scanner = () => {
   }, []);
 
   const getData = async (data: any) => {
-    const coupon: Coupon = await Api.CouponsApi.getByCode(data).then((response) => response);
+    const coupon = await Api.CouponsApi.getByCode(data).then((response) => response);
+    // Stop here if -1 is returned
+    if (typeof coupon === 'number') {
+      return;
+    }
     // nav.navigate('Coupon', coupon);
   };
 

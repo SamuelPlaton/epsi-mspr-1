@@ -138,8 +138,8 @@ routes.post('/users/login', async (request, response) => {
         return result[0];
     });
     if (!userResult) {
-        response.send('-21');
-        response.status(403).end();
+        response.status(403);
+        response.send('-21').end();
         return;
     }
 

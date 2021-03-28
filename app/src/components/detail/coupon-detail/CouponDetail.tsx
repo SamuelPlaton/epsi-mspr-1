@@ -1,11 +1,10 @@
-import {Coupon, Store, User, UserCoupon} from "../../entities";
+import {Coupon, Store, User, UserCoupon} from "../../../entities";
 import React, {FunctionComponent} from 'react';
 import {GestureResponderEvent, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {genericStyles} from "../../../styles";
 import {Images} from "../../../images";
 import moment from "moment";
 import 'moment/locale/fr';
-import {retrieveActiveUser} from "../../../store/UserManager";
 import {ModifyCouponData, NewCouponData} from "../../../api/coupons/CouponsApi";
 import Api from "../../../api/Api";
 
@@ -39,12 +38,18 @@ const CouponDetail: FunctionComponent<Props> = ({activeUser, coupon, onUpdateUse
         used: userCoupon.attributes.used.toString(),
         favored: userCoupon.attributes.favored === "1" ? "0" : "1"}
       const updatedUserCoupon = await Api.CouponsApi.put(data);
-      console.log(updatedUserCoupon);
+      // Stop here if -1 is returned
+      if (typeof updatedUserCoupon === 'number') {
+        return;
+      }
       onUpdateUserCoupon(updatedUserCoupon);
     } else {
       const data: NewCouponData = { couponId: coupon.id, userId: activeUser.id, userToken: activeUser.attributes.token}
       const newUserCoupon = await Api.CouponsApi.post(data);
-      console.log(newUserCoupon);
+      // Stop here if -1 is returned
+      if (typeof newUserCoupon === 'number') {
+        return;
+      }
       onUpdateUserCoupon(newUserCoupon);
     }
   }

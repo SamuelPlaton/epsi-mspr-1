@@ -5,7 +5,7 @@ import React, {FunctionComponent, useEffect, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {genericStyles} from "../../styles";
 import {retrieveActiveUser} from "../../store/UserManager";
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 /**
  * The react coupons page.
@@ -38,6 +38,12 @@ const CouponsPage: FunctionComponent = () => {
       return;
     }
     const data = await Api.UsersApi.get(activeUser.id);
+
+    // Stop here if -1 is returned
+    if (typeof data === 'number') {
+      return;
+    }
+
     const favoredCoupons = data.coupons.filter((c) => {
       const userCoupon = data.userCoupons.find((uc) => uc.relationships.coupon === c.id);
       const uniqueStatement =
