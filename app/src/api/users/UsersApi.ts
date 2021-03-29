@@ -39,13 +39,8 @@ const UsersApi = {
   }).catch(err => handleErrorMessages(err.response.data)),
 
   post: (userData: NewUserData) => client.post('/users', {data: userData}).then(response => {
-    console.log('then');
     return setUser(response.data);
-  }).catch(err => {
-    console.log(err);
-    console.log('error');
-    return handleErrorMessages(err.response.data);
-  }),
+  }).catch(err => handleErrorMessages(err.response.data)),
 
   login: (email: string, password: string) => client.post('/users/login', {data: { email, password }}).then(response => {
     return setUser(response.data);
