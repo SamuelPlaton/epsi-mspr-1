@@ -37,9 +37,9 @@ const UserInfo: FunctionComponent = () => {
 
     const userData = await Api.UsersApi.get(activeUser.id);
     const storeData = await Api.StoresApi.list();
-    console.log('---------')
-    console.log(userData);
-    // console.log('-----|----')
+    console.log('---------');
+    console.log(userData.stores);
+    // console.log('-----|----');
     // console.log(storeData);
 
     setStores(storeData);
@@ -85,7 +85,13 @@ const UserInfo: FunctionComponent = () => {
             <Text style={{...genericStyles.usertitle}}>Mes magasins</Text>
             {/* <Text style={{...genericStyles.usertext}}>{}</Text> */}
             {/* <Text style={{...genericStyles.usertext}}>{activeStores}</Text> */}
-            <StoreList stores={activeStores}/>
+
+            {( stores ) && (
+
+            <StoreList stores={stores}/>
+            
+            )}
+
             </View>
           </View>
         )
