@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { HomePage, LoginPage, RegisterPage, ScannerPage, CouponPage, CouponsPage ,HistoricPage, MapPage, UserPage} from '../pages';
+import { HomePage, LoginPage, RegisterPage, ScannerPage, CouponPage, CouponsPage ,HistoricPage, MapPage, UserPage, FavStorePage} from '../pages';
 
 const Router: FunctionComponent = () => {
   const Stack = createStackNavigator();
@@ -14,6 +14,7 @@ const Router: FunctionComponent = () => {
         <Stack.Screen name="Coupon" component={CouponPage} />
         <Stack.Screen name="Historic" component={HistoricPage} />
         <Stack.Screen name="Map" component={MapPage} />
+        <Stack.Screen name="Stores" component={FavStorePage} />
         <Stack.Screen name="User" component={UserPage} />
       </Stack.Navigator>
     );

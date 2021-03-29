@@ -1,5 +1,7 @@
 import { client } from '../client';
 import { handleErrorMessages, setCoupon, setHistoriqueCoupon, setStore, setUser, setUserCoupon } from '../helpers';
+import {setIncludes} from "../helpers";
+import {User, UserCoupon} from "../../entities";
 
 export interface NewUserData {
   firstName: string,
@@ -25,6 +27,8 @@ export interface PasswordData {
 
 const UsersApi = {
   get: (id: string) => client.get(`/users/${id}?coupons=true&stores=true`).then(response => {
+    console.log('réponse');
+    console.log(response.data['stores']);
     return {
       user: setUser(response.data.user),
       coupons: response.data.coupons.map(c => setCoupon(c)),

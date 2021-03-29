@@ -6,6 +6,7 @@ const StoresApi = {
     return setStore(response.data);
   }).catch(err => handleErrorMessages(err.response.data)),
 
+
   list: (ids?: Array<string>) => client.get(ids ? `/stores/selected?ids=${ids.join(',')}` : '/stores').then(response => {
     return response.data.map(store => setStore(store));
   }).catch(err => handleErrorMessages(err.response.data)),
