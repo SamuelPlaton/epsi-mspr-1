@@ -27,7 +27,7 @@ const LoginForm: FunctionComponent = () => {
     }
 
     return (
-        <View style={genericStyles.container}>
+        <View style={genericStyles.container} accessibilityLabel="page-de-connexion">
           <Text style={genericStyles.titleText}>Connexion</Text>
           <Text style={genericStyles.label}>Entrez votre email</Text>
           <TextInput
@@ -37,6 +37,7 @@ const LoginForm: FunctionComponent = () => {
             placeholder='Email'
             placeholderTextColor = '#999999'
             style={genericStyles.input}
+            accessibilityLabel="email"
           />
           <Text style={genericStyles.label}>Entrez votre mot de passe</Text>
           <TextInput
@@ -46,10 +47,12 @@ const LoginForm: FunctionComponent = () => {
             secureTextEntry={true}
             placeholderTextColor = '#999999'
             style={genericStyles.input}
+            accessibilityLabel="password"
+
           />
-          <Button title={'Se connecter'} onPress={handleLogin} />
+          <Button accessibilityLabel="connexion" title={'Se connecter'} onPress={handleLogin} />
         </View>
       );
-}  
+}
 
 export default LoginForm;
