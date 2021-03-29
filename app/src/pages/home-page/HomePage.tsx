@@ -61,6 +61,7 @@ const HomePage: FunctionComponent = () => {
             <Text style={{...genericStyles.marginXAuto, ...genericStyles.subtitleText}}>Salut {activeUser.attributes.firstName} !</Text>
             <View style={{...genericStyles.rowBetween, ...styles.center}}>
             <Button title='Profile' onPress={() => nav.navigate('User')}/>
+            <Button title='Mes Stores' onPress={() => nav.navigate('Stores')}/>
               <LinkCard text='Scanner' icon={Images.qrCode} link='/qr-scanner'/>
               <LinkCard text='Mes coupons' icon={Images.heart} link='Coupons'/>
             </View>

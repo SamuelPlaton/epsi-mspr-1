@@ -2,6 +2,7 @@ import { client } from '../client';
 import {setIncludes} from "../helpers";
 import {User, UserCoupon} from "../../entities";
 import {setCoupon} from "../coupons/CouponsApi";
+import { setStore } from '../stores/StoresApi';
 
 export interface NewUserData {
   firstName: string,
@@ -53,11 +54,14 @@ export const setUserCoupon = (uc: Object): UserCoupon => {
 }
 
 const UsersApi = {
-  get: (id: string) => client.get(`/users/${id}?coupons=true`).then(response => {
+  get: (id: string) => client.get(`/users/${id}?coupons=true&stores=true`).then(response => {
+    console.log('réponse');
+    console.log(response.data['stores']);
     return {
-      user: setUser(response.data.user[0]),
+      user: setUser(response.data.user),
       coupons: response.data.coupons.map(c => setCoupon(c)),
       userCoupons: response.data.userCoupons.map(uc => setUserCoupon(uc)),
+      stores: response.data.stores.map(s => setStore(s)),
     }
   }),
   list: (ids: Array<string>) => client.get('/users', {data: ids}).then(response => {

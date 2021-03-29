@@ -1,6 +1,6 @@
 import Api from "../../../api/Api";
-import {Coupon, User} from "../../../entities";
-import {CouponList, LinkCard} from "../../../components";
+import {Store, User} from "../../../entities";
+import {LinkCard} from "../../../components";
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Images} from "../../../images";
@@ -8,7 +8,9 @@ import {genericStyles} from "../../../styles";
 import {retrieveActiveUser} from "../../../store/UserManager";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {setStore} from "../../../api/stores/StoresApi";
 import moment from "moment";
+import StoreList from "../../list/store-list/StoreList";
 
 /**
  * The user page.
@@ -18,27 +20,35 @@ const UserInfo: FunctionComponent = () => {
   const nav = useNavigation();
   const route = useRoute();
 
-//   const [coupons, setCoupons] = useState<Array<Coupon>>(undefined);
+  const [stores, setStores] = useState<Array<Store>>(undefined);
+  const [activeStores, setActiveStores] = useState<Array<Store>>(undefined);
 
   // Retrieve our active user
   const [activeUser, setActiveUser] = useState<User | undefined>(route.params ? route.params as User : undefined);
-  retrieveActiveUser().then(response => {
-    setActiveUser(response);
-  })
+  
+  const getData = async () => {
 
-  // const getData = async () => {
-    // await AsyncStorage.removeItem('activeUser'); // Disconnect
-    // const data = await Api.CouponsApi.listRecommended(activeUser.id);
-    // console.log(activeUser);
+    retrieveActiveUser().then(response => {
+      setActiveUser(response);
+      
+    })
 
+    if (!activeUser) return;
 
-    // const retrievedCoupons: Array<Coupon> = await Api.CouponsApi.list(['1', '2']).then(response => response);
-    // setCoupons(retrievedCoupons);
-  // }
+    const userData = await Api.UsersApi.get(activeUser.id);
+    const storeData = await Api.StoresApi.list();
+    console.log('---------')
+    console.log(userData);
+    // console.log('-----|----')
+    // console.log(storeData);
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+    setStores(storeData);
+    setActiveStores(userData.stores);
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   // const dateAnniv = moment(activeUser.attributes.birthday).locale('FR')
   // console.log(dateAnniv);
@@ -61,25 +71,22 @@ const UserInfo: FunctionComponent = () => {
     <ScrollView>
       {activeUser ? (
           <View style={{...genericStyles.userpage}}>
-            <Text style={{...genericStyles.marginXAuto, ...genericStyles.usertitle}}>Profile</Text>
-            <View>
-              <Text style={{...genericStyles.marginXAuto, ...genericStyles.userlabel}}>Nom : {activeUser.attributes.lastName}</Text>
-              <Text style={{...genericStyles.marginXAuto, ...genericStyles.userlabel}}>Prénom : {activeUser.attributes.firstName}</Text>
-              <Text style={{...genericStyles.marginXAuto, ...genericStyles.userlabel}}>Email : {activeUser.attributes.email}</Text>
-              <Text style={{...genericStyles.marginXAuto, ...genericStyles.userlabel}}>Date d'anniversaire : {activeUser.attributes.birthday} </Text>
-            </View>
             
+            <Text style={{...genericStyles.usertitle}}>Mon Compte</Text>
+            <LinkCard text='' icon={Images.defaultProfilPic} link=''/>
 
-            {/* <View style={{...genericStyles.rowBetween, ...styles.center}}>
-              <LinkCard text='Scanner' icon={Images.qrCode} link='/qr-scanner'/>
-              <LinkCard text='Mes coupons' icon={Images.heart} link='/my-coupons'/>
+            <View>
+              <Text style={{...genericStyles.userlabel}}>Nom : <Text style={{...genericStyles.usertext}}>{activeUser.attributes.lastName} {activeUser.attributes.firstName}</Text></Text>
+              <Text style={{...genericStyles.userlabel}}>Email : <Text style={{...genericStyles.usertext}}>{activeUser.attributes.email}</Text></Text>
+              <Text style={{...genericStyles.userlabel}}>Date d'anniversaire : <Text style={{...genericStyles.usertext}}>{moment(activeUser.attributes.birthday).locale('fr').format('L')}</Text></Text>
             </View>
-            <View style={{...genericStyles.rowBetween, ...styles.center}}>
-              <LinkCard text='Etablissements' icon={Images.googleMaps} link='/establishments'/>
-              <LinkCard text='Commander' icon={Images.globe} link='https://google.com'/>
-            </View> */}
-            {/* <Text style={{...genericStyles.marginXAuto, ...styles.greetings}}> Les dernières offres ! </Text> */}
-            {/* {coupons && <CouponList coupons={coupons}/>} */}
+
+            <View>
+            <Text style={{...genericStyles.usertitle}}>Mes magasins</Text>
+            {/* <Text style={{...genericStyles.usertext}}>{}</Text> */}
+            {/* <Text style={{...genericStyles.usertext}}>{activeStores}</Text> */}
+            <StoreList stores={activeStores}/>
+            </View>
           </View>
         )
         :

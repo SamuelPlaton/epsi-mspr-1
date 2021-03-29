@@ -7,7 +7,8 @@ const Images = {
   coupon: require('../assets/icons/coupon.png'),
   qrCode: require('../assets/icons/qr-code.png'),
   googleMaps: require('../assets/icons/google-maps.png'),
-  globe: require('../assets/icons/globe.png')
+  globe: require('../assets/icons/globe.png'),
+  defaultProfilPic: require('../assets/icons/default-profile-picture.png')
 }
 
 export default Images;
