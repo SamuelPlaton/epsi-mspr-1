@@ -12,29 +12,28 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import {Coupon, UserCoupon} from "../../../entities";
+import {Coupon, UserCoupon, Store} from "../../../entities";
 import {genericStyles} from "../../../styles";
 import {Images} from "../../../images";
 import Api from "../../../api/Api";
 import {retrieveActiveUser} from "../../../store/UserManager";
-import {ModifyCouponData, NewCouponData} from "../../../api/coupons/CouponsApi";
+import {ModifyCouponData, NewCouponData} from "../../../api/Stores/StoresApi";
 
 /* Coupon info Props
 *   coupon: The coupon component
  */
 export interface Props {
-  coupon: Coupon;
-  userCoupon?: UserCoupon;
-  onUpdateUserCoupon: (uc: UserCoupon, action: string) => void;
+  store: Store;
+  userStore?: UserStore;
+  onUpdateUserStore: (uc: UserStore, action: string) => void;
 }
 
 /**
  * The react coupon info component.
  */
-const FavStoreInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, userCoupon}) => {
-  const {title, end, offer, code} = coupon.attributes;
-  const date = moment(end).locale('fr').format('L');
-  const iconInteraction = (userCoupon && parseInt(userCoupon.attributes.favored) === 1) ? Images.heartFull : Images.heartEmpty;
+const FavStoreInfo: FunctionComponent<Props> = ({UserStore, onUpdateUserStore, userStore}) => {
+  const {title, end, offer, code} = store.attributes;
+  const iconInteraction = (userStore && parseInt(userCoupon.attributes.favored) === 1) ? Images.heartFull : Images.heartEmpty;
 
   const styles = StyleSheet.create({
     title: {
@@ -82,7 +81,6 @@ const FavStoreInfo: FunctionComponent<Props> = ({coupon, onUpdateUserCoupon, use
 
   return (
     <View>
-      <Text style={styles.date}>Expire le {date}</Text>
       <View style={genericStyles.rowStart}>
         <Image source={require('../../../assets/icons/coupon.png')} style={genericStyles.iconMedium}/>
         <View>
