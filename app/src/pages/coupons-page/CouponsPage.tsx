@@ -5,7 +5,7 @@ import React, {FunctionComponent, useEffect, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {genericStyles} from "../../styles";
 import {retrieveActiveUser} from "../../store/UserManager";
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 /**
  * The react coupons page.
@@ -23,6 +23,7 @@ const CouponsPage: FunctionComponent = () => {
   }, []);
 
   const [coupons, setCoupons] = useState<Array<Coupon>>(undefined);
+  const [activeCoupons, setActiveCoupons] = useState<Array<Coupon>>(undefined);
   const [userCoupons, setUserCoupons] = useState<Array<UserCoupon>>(undefined);
   const [activeUser, setActiveUser] = useState<User | undefined>(undefined);
 
@@ -38,6 +39,12 @@ const CouponsPage: FunctionComponent = () => {
       return;
     }
     const data = await Api.UsersApi.get(activeUser.id);
+
+    // Stop here if -1 is returned
+    if (typeof data === 'number') {
+      return;
+    }
+
     const favoredCoupons = data.coupons.filter((c) => {
       const userCoupon = data.userCoupons.find((uc) => uc.relationships.coupon === c.id);
       const uniqueStatement =
@@ -45,6 +52,20 @@ const CouponsPage: FunctionComponent = () => {
         (c.attributes.unique === 1 && userCoupon && parseInt(userCoupon.attributes.used) === 0);
       return userCoupon && parseInt(userCoupon.attributes.favored) === 1 && c.attributes.valid === 1 && uniqueStatement;
     });
+
+    const now = new Date();
+    now.setMinutes(now.getMinutes()-30);
+    const recentCoupons = data.coupons.filter((c) => {
+      const userCoupon = data.userCoupons.find((uc) => uc.relationships.coupon === c.id);
+      if (userCoupon) {
+        const historiqueCoupon = data.historiqueCoupons.find((hc) => hc.relationships.userCoupon === userCoupon.id);
+        if (historiqueCoupon && new Date(historiqueCoupon.attributes.usedTime) > now) {
+          return c;
+        }
+      }
+    });
+
+    setActiveCoupons(recentCoupons)
     setCoupons(favoredCoupons);
     setUserCoupons(data.userCoupons);
   };
@@ -55,11 +76,20 @@ const CouponsPage: FunctionComponent = () => {
 
   return (
     <ScrollView>
+      {activeCoupons && activeCoupons.length > 0 && (
+          <View>
+            <Text style={{ ...genericStyles.subtitleText, ...genericStyles.marginXAuto }}>
+              {' '}
+              Mes Coupons en cours ({activeCoupons.length})
+            </Text>
+            <CouponList coupons={activeCoupons} userCoupons={userCoupons} />
+          </View>
+        )}
       {coupons && coupons.length > 0 ? (
         <View>
           <Text style={{ ...genericStyles.subtitleText, ...genericStyles.marginXAuto }}>
             {' '}
-            Mes Coupons ({coupons.length})
+            Mes Coupons favoris ({coupons.length})
           </Text>
           <CouponList coupons={coupons} userCoupons={userCoupons} />
         </View>

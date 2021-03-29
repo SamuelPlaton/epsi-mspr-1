@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState} from 'react';
-import { Alert, View, Text, Button, TextInput } from 'react-native';
+import { View, Text, Button, TextInput } from 'react-native';
 import { genericStyles } from '../../../styles';
 import Api from "../../../api/Api";
 import {storeActiveUser} from "../../../store/UserManager";
@@ -17,11 +17,9 @@ const LoginForm: FunctionComponent = () => {
 
     const handleLogin = async () => {
       const data = await Api.UsersApi.login(email, password);
-      if(data === -1){
-        Alert.alert(`Erreur dans l'email`);
-        return;
-      }else if(data === -2){
-        Alert.alert(`Erreur dans le mot de passe`);
+      console.log(data);
+      // Stop here if -1 is returned
+      if (typeof data === 'number') {
         return;
       }
       await storeActiveUser(data as User);

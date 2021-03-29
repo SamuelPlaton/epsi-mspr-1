@@ -1,5 +1,5 @@
 import express from 'express';
-import {checkToken, checkUniqueCoupon, checkUserCoupon} from "../security/security.js";
+import {checkToken, checkUserCoupon} from "../security/security.js";
 import {sqlInstance} from "../../index.js";
 import {v4 as uuidv4} from 'uuid';
 
@@ -67,21 +67,12 @@ routes.post('/coupons', async (request, response) => {
         response.send('-10').end(); // Invalid coupon
         return;
     }
-    const uniqueCoupon = await checkUniqueCoupon(data.couponId);
-    const alreadyUsedCoupon = await checkUserCoupon(data.userId, data.couponId);
-    if (uniqueCoupon && alreadyUsedCoupon) {
+
+    const alreadyExistingCoupon = await checkUserCoupon(data.userId, data.couponId);
+    if (alreadyExistingCoupon) {
         response.status(403);
         response.send('-11').end(); // Used coupon
         return;
-    }
-
-    // Check if coupon is not already pending by the user
-    const pendingCoupon = await sqlInstance.request('SELECT * FROM USER_COUPON WHERE USER = ? AND COUPON = ? AND USED = 0', [data.userId, data.couponId]).then(result => {
-        return result.length > 0;
-    });
-    if(pendingCoupon){
-        response.status(403);
-        response.send('-12').end(); // Pending coupon
     }
 
     // Do insertion

@@ -80,7 +80,7 @@ routes.get('/users/:id', async (request, response) => {
   // Set our final query
   sqlInstance.request(query.join(';'), queryParams).then(result => {
     response.send({
-      user: result[idx[0]],
+      user: result[idx[0]][0],
       stores : result[idx[1]],
       userCoupons: result[idx[2]],
       coupons: result[idx[3]],
