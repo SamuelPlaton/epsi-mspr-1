@@ -1,5 +1,6 @@
 import React, {FunctionComponent} from 'react';
 import {View, Text, ScrollView} from "react-native";
+import {genericStyles} from "../../../styles";
 import {Store} from "../../../entities";
 
 /* Coupon List Props
@@ -13,11 +14,15 @@ export interface Props {
  * The react coupon list component.
  */
 const StoreList: FunctionComponent<Props> = ({stores}) => {
-
+// console.log("stores");
   return (
     <View>
-      {stores.map(store => console.log(store))}
-      {/* {stores.map(store => console.log(store.id))} */}
+
+    { stores.map( store => (
+      <View>
+        <Text>{store.attributes.name}</Text>
+      </View>
+    ))}
     </View>
   );
 }
