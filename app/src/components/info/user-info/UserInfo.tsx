@@ -8,11 +8,7 @@ import {genericStyles} from "../../../styles";
 import {retrieveActiveUser} from "../../../store/UserManager";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-<<<<<<< HEAD
 import setStore from "../../../api/stores/StoresApi";
-=======
-import {setStore} from "../../../api/stores/StoresApi";
->>>>>>> ebdaf0f33ba51a9b6ae889e4a7f3c07a263d1d85
 import moment from "moment";
 import StoreList from "../../list/store-list/StoreList";
 
@@ -41,6 +37,12 @@ const UserInfo: FunctionComponent = () => {
 
     const userData = await Api.UsersApi.get(activeUser.id);
     const storeData = await Api.StoresApi.list();
+
+    // Stop here if -1 is returned
+    if (typeof userData === 'number') {
+      return;
+    }
+
     console.log('---------');
     console.log(userData.stores);
     // console.log('-----|----');
