@@ -27,6 +27,7 @@ const RegisterForm: FunctionComponent = () => {
 
     if (/\S+@\S+\.\S+/.test(email) != true ) {
       Alert.alert('Email non valide');
+      return;
     }
 
     if (password !== confPassword) {
