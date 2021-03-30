@@ -1,20 +1,6 @@
 
 import { client } from '../client';
-import { handleErrorMessages, setIncludes } from "../helpers";
-import {Store} from "../../entities";
-
-export const setStore = (store: Object): Store => {
-  return {id: store['id'],
-    attributes: {
-      name: store['name'],
-      localization: store['localization'],
-    },
-    relationships:{
-      users: store['users'],
-      coupons: store['coupons'],
-    }
-  };
-}
+import { handleErrorMessages, setIncludes, setStore } from "../helpers";
 
 const StoresApi = {
   get: (id: string, includes?: Array<string>) => client.get(`/stores/${id}`, setIncludes(includes)).then(response => {
