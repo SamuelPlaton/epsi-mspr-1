@@ -24,6 +24,11 @@ const RegisterForm: FunctionComponent = () => {
   const [year, setYear] = useState<number>(2000);
 
   const onRegister = async() => {
+
+    if (/\S+@\S+\.\S+/.test(email) != true ) {
+      Alert.alert('Email non valide');
+    }
+
     if (password !== confPassword) {
       Alert.alert('Les mots de passe ne sont pas les mêmes');
       return;
