@@ -1,7 +1,5 @@
 import { client } from '../client';
 import { handleErrorMessages, setCoupon, setHistoriqueCoupon, setStore, setUser, setUserCoupon } from '../helpers';
-import {setIncludes} from "../helpers";
-import {User, UserCoupon} from "../../entities";
 
 export interface NewUserData {
   firstName: string,
