@@ -69,9 +69,8 @@ const HomePage: FunctionComponent = () => {
           <Text style={{ ...genericStyles.marginXAuto, ...genericStyles.subtitleText }}>
             Salut {activeUser.attributes.firstName} !
           </Text>
+          <Button title='Temp Profile' onPress={() => nav.navigate('User')}/>
           <View style={{ ...genericStyles.rowBetween, ...genericStyles.center }}>
-          <Button title='Profile' onPress={() => nav.navigate('User')}/>
-            <Button title='Mes Stores' onPress={() => nav.navigate('Stores')}/>
             <LinkCard text='Scanner' icon={Images.qrCode} link='Scan' />
             <LinkCard text='Mes coupons' icon={Images.heart} link='Coupons' />
           </View>

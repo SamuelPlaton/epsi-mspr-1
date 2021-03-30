@@ -1,14 +1,12 @@
 import Api from "../../../api/Api";
+import { Image, StyleSheet, Text, View } from "react-native";
 import {Store, User} from "../../../entities";
-import {LinkCard} from "../../../components";
+import { BaseCard } from "../../../components";
 import React, {FunctionComponent, useEffect, useState} from 'react';
-import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Images} from "../../../images";
 import {genericStyles} from "../../../styles";
 import {retrieveActiveUser} from "../../../store/UserManager";
 import { useNavigation, useRoute } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import setStore from "../../../api/stores/StoresApi";
 import moment from "moment";
 import StoreList from "../../list/store-list/StoreList";
 
@@ -17,20 +15,16 @@ import StoreList from "../../list/store-list/StoreList";
  */
 
 const UserInfo: FunctionComponent = () => {
-  const nav = useNavigation();
-  const route = useRoute();
 
   const [stores, setStores] = useState<Array<Store>>(undefined);
   const [activeStores, setActiveStores] = useState<Array<Store>>(undefined);
 
   // Retrieve our active user
-  const [activeUser, setActiveUser] = useState<User | undefined>(route.params ? route.params as User : undefined);
+  const [activeUser, setActiveUser] = useState<User | undefined>(undefined);
   
   const getData = async () => {
-
     retrieveActiveUser().then(response => {
       setActiveUser(response);
-      
     })
 
     if (!activeUser) return;
@@ -43,79 +37,81 @@ const UserInfo: FunctionComponent = () => {
       return;
     }
 
-    console.log('---------');
-    console.log(userData.stores);
-    // console.log('-----|----');
-    // console.log(storeData);
-
     setStores(storeData);
     setActiveStores(userData.stores);
   }
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [activeUser]);
 
-  // const dateAnniv = moment(activeUser.attributes.birthday).locale('FR')
-  // console.log(dateAnniv);
-  // const styles = StyleSheet.create({
-  //   center: {
-  //     width: '85%',
-  //     marginLeft: 'auto',
-  //     marginRight: 'auto'
-  //   },
-  //   greetings: {
-  //     width: '80%',
-  //     marginTop: 10,
-  //     marginBottom: 10,
-  //     fontSize: 20
-  //   }
-  // });
+  const styles = StyleSheet.create({
+    userpage: {
+      margin: '4%',
+      backgroundColor: 'white',
+      borderWidth: 4,
+      borderRadius: 25,
+      paddingBottom: 60,
+      borderColor: 'powderblue',
+    },
 
+    usertitle: {
+      color: '#2b6cda',
+      fontSize: 30,
+      textAlign: 'center',
+      fontWeight: 'bold',
+      marginLeft: 8,
+      marginBottom: 12,
+    },
+    userlabel: {
+      textAlign: 'center',
+      color: '#2b58da',
+      fontSize: 20,
+      marginLeft: 20,
+      marginRight: 10
+    },
+
+    usertext: {
+      color: 'black',
+      fontSize: 20,
+    }
+  });
+
+  const birthdayDate = moment(activeUser?.attributes.birthday).locale('fr').format('L');
 
   return (
-    <ScrollView>
-      {activeUser ? (
-          <View style={{...genericStyles.userpage}}>
-            
-            <Text style={{...genericStyles.usertitle}}>Mon Compte</Text>
-            <LinkCard text='' icon={Images.defaultProfilPic} link=''/>
-
-            <View>
-              <Text style={{...genericStyles.userlabel}}>Nom : <Text style={{...genericStyles.usertext}}>{activeUser.attributes.lastName} {activeUser.attributes.firstName}</Text></Text>
-              <Text style={{...genericStyles.userlabel}}>Email : <Text style={{...genericStyles.usertext}}>{activeUser.attributes.email}</Text></Text>
-              <Text style={{...genericStyles.userlabel}}>Date d'anniversaire : <Text style={{...genericStyles.usertext}}>{moment(activeUser.attributes.birthday).locale('fr').format('L')}</Text></Text>
+    <View>
+      {activeUser && (
+          <View style={styles.userpage}>
+            <Text style={styles.usertitle}>Mon Compte</Text>
+            <Image source={Images.defaultProfilPic} style={genericStyles.iconLarge} />
+            <View style={{marginBottom: 20}}>
+              <View style={genericStyles.rowStart}>
+                <Text style={styles.userlabel}>Nom :</Text>
+                <Text style={styles.usertext}>{activeUser.attributes.firstName} {activeUser.attributes.lastName}</Text>
+              </View>
+              <View style={genericStyles.rowStart}>
+                <Text style={styles.userlabel}>Email :</Text>
+                <Text style={styles.usertext}>{activeUser.attributes.email}</Text>
+              </View>
+              <View style={genericStyles.rowStart}>
+                <Text style={styles.userlabel}>Date d'anniversaire : </Text>
+                <Text style={styles.usertext}>{birthdayDate}</Text>
+              </View>
             </View>
-
             <View>
-            <Text style={{...genericStyles.usertitle}}>Mes magasins</Text>
-            {/* <Text style={{...genericStyles.usertext}}>{}</Text> */}
-            {/* <Text style={{...genericStyles.usertext}}>{activeStores}</Text> */}
-
-            {( stores ) && (
-
-            <StoreList stores={stores}/>
-            
+            <Text style={styles.usertitle}>Mes magasins</Text>
+            { (stores && activeStores) && (
+              <StoreList
+                activeStores={activeStores}
+                activeUser={activeUser}
+                stores={stores.filter( s => s.id !== "1")}
+              />
             )}
-
             </View>
           </View>
-        )
-        :
-        (
-          <View>
-            <View style={{width: '50%', ...genericStyles.marginXAuto, marginTop: 15}}>
-              
-            </View>
-            <Text style={{marginTop: 5, marginBottom: 5, textAlign: 'center'}}>Ou</Text>
-            <View style={{width: '50%', ...genericStyles.marginXAuto}}>
-            <Button title="S'inscrire" onPress={() => nav.navigate('Register')}/>
-            </View>
-          </View>
-        )
-      }
-
-    </ScrollView>
+        )}
+    </View>
   );
 }
 export default UserInfo;
