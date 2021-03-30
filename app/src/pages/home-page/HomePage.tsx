@@ -1,3 +1,4 @@
+  
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Button, ScrollView, Text, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -68,6 +69,7 @@ const HomePage: FunctionComponent = () => {
           <Text style={{ ...genericStyles.marginXAuto, ...genericStyles.subtitleText }}>
             Salut {activeUser.attributes.firstName} !
           </Text>
+          <Button title='Temp Profile' onPress={() => nav.navigate('User')}/>
           <View style={{ ...genericStyles.rowBetween, ...genericStyles.center }}>
             <LinkCard text='Scanner' icon={Images.qrCode} link='Scan' />
             <LinkCard text='Mes coupons' icon={Images.heart} link='Coupons' />
