@@ -6,3 +6,4 @@ export { default as ScannerPage } from './scanner-page/ScannerPage';
 export { default as LoginPage } from './login-page/LoginPage';
 export { default as RegisterPage } from './register-page/RegisterPage';
 export { default as MapPage } from './map-page/MapPage';
+export { default as UserPage } from './user-page/UserPage';
