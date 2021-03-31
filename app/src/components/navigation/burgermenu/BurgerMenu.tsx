@@ -81,18 +81,24 @@ const BurgerMenu: FunctionComponent = () => {
             <View style={isActive ? styles.blur : styles.unactive}>
                 <View style={isActive ? styles.active : styles.unactive}>
                     <View style={genericStyles.rowBetween}>
-                        <Text style={styles.text}>Home</Text>
-                            <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Home')}/>
-                        <Text style={styles.text}>QR scanner</Text>
-                            <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Scan')}/>
-                        <Text style={styles.text}>Coupons</Text>
-                            <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Coupons')}/>
-                        <Text style={styles.text}>Historique</Text>
-                            <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Historic')}/>
-                        <Text style={styles.text}>Mappe</Text>
-                            <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Map')}/>
-                        <Text style={styles.text}>Profile</Text>
-                            <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('User')}/>
+                        <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Home')}>
+                            <Text style={styles.text}>Home</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Scan')}>
+                            <Text style={styles.text}>QR scanner</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Coupons')}>
+                            <Text style={styles.text}>Coupons</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Historic')}>    
+                            <Text style={styles.text}>Historique</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Map')}>
+                            <Text style={styles.text}>Mappe</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('User')}>    
+                            <Text style={styles.text}>Profile</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
