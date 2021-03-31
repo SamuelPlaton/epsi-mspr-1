@@ -22,16 +22,17 @@ const Scanner = () => {
     const coupon = await Api.CouponsApi.getByCode(data).then((response) => response);
     // Stop here if -1 is returned
     if (typeof coupon === 'number') {
+      setScanned(true);
       return;
     }
-    // nav.navigate('Coupon', coupon);
+    nav.navigate('Coupon', coupon);
   };
 
   const handleBarCodeScanned = ({ data }) => {
+
     if (scanned) {
       return;
     }
-    setScanned(true);
     getData(data);
   };
 
