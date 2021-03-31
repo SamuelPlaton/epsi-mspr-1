@@ -1,14 +1,13 @@
 import Api from "../../../api/Api";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {Store, User} from "../../../entities";
-import { BaseCard } from "../../../components";
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import {Images} from "../../../images";
 import {genericStyles} from "../../../styles";
-import {retrieveActiveUser} from "../../../store/UserManager";
-import { useNavigation, useRoute } from '@react-navigation/native';
 import moment from "moment";
 import StoreList from "../../list/store-list/StoreList";
+import { UserForm } from "../../form";
+import { retrieveActiveUser } from "../../../store/UserManager";
 
 /**
  * The user page.
@@ -18,6 +17,7 @@ const UserInfo: FunctionComponent = () => {
 
   const [stores, setStores] = useState<Array<Store>>(undefined);
   const [activeStores, setActiveStores] = useState<Array<Store>>(undefined);
+  const [editable, setEditable] = useState<boolean>(false);
 
   // Retrieve our active user
   const [activeUser, setActiveUser] = useState<User | undefined>(undefined);
@@ -83,22 +83,31 @@ const UserInfo: FunctionComponent = () => {
     <View>
       {activeUser && (
           <View style={styles.userpage}>
-            <Text style={styles.usertitle}>Mon Compte</Text>
-            <Image source={Images.defaultProfilPic} style={genericStyles.iconLarge} />
-            <View style={{marginBottom: 20}}>
-              <View style={genericStyles.rowStart}>
-                <Text style={styles.userlabel}>Nom :</Text>
-                <Text style={styles.usertext}>{activeUser.attributes.firstName} {activeUser.attributes.lastName}</Text>
-              </View>
-              <View style={genericStyles.rowStart}>
-                <Text style={styles.userlabel}>Email :</Text>
-                <Text style={styles.usertext}>{activeUser.attributes.email}</Text>
-              </View>
-              <View style={genericStyles.rowStart}>
-                <Text style={styles.userlabel}>Date d'anniversaire : </Text>
-                <Text style={styles.usertext}>{birthdayDate}</Text>
-              </View>
+            <View>
+              <Text style={styles.usertitle}>Mon Compte</Text>
+              <TouchableOpacity onPress={() => setEditable(!editable)}>
+                <Text style={{ marginLeft: 15, color: editable ? 'red' : 'black'}}>{editable ? "Annuler" : "Modifier"}</Text>
+              </TouchableOpacity>
             </View>
+            <Image source={Images.defaultProfilPic} style={genericStyles.iconLarge} />
+            {editable ? (
+              <UserForm activeUser={activeUser} onSubmit={() => setEditable(false)} />
+            ) : (
+              <View style={{marginBottom: 20}}>
+                <View style={genericStyles.rowStart}>
+                  <Text style={styles.userlabel}>Nom :</Text>
+                  <Text style={styles.usertext}>{activeUser.attributes.firstName} {activeUser.attributes.lastName}</Text>
+                </View>
+                <View style={genericStyles.rowStart}>
+                  <Text style={styles.userlabel}>Email :</Text>
+                  <Text style={styles.usertext}>{activeUser.attributes.email}</Text>
+                </View>
+                <View style={genericStyles.rowStart}>
+                  <Text style={styles.userlabel}>Date d'anniversaire : </Text>
+                  <Text style={styles.usertext}>{birthdayDate}</Text>
+                </View>
+              </View>
+            )}
             <View>
             <Text style={styles.usertitle}>Mes magasins</Text>
             { (stores && activeStores) && (

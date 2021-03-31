@@ -48,6 +48,7 @@ const UsersApi = {
 
   modify: (id: string, userData: ModifyUserData) => client.put(`/users/${id}`, {data: userData}).then(response => {
     console.log(response);
+    return response.data;
   }).catch(err => handleErrorMessages(err.response.data)),
 
   modifyPassword: (id: string, passwordData: PasswordData) => client.put(`/users/password/${id}`, {data: passwordData}).then(response => {

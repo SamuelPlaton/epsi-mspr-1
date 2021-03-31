@@ -17,7 +17,6 @@ const LoginForm: FunctionComponent = () => {
 
     const handleLogin = async () => {
       const data = await Api.UsersApi.login(email, password);
-      console.log(data);
       // Stop here if -1 is returned
       if (typeof data === 'number') {
         return;
