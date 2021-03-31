@@ -64,7 +64,7 @@ const HomePage: FunctionComponent = () => {
 
   return (
     <ScrollView>
-      <BurgerMenu/>
+      <BurgerMenu title="Home"/>
       {activeUser ? (
         <View>
           <Text style={{ ...genericStyles.marginXAuto, ...genericStyles.subtitleText }}>

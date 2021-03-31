@@ -8,7 +8,12 @@ import { genericStyles } from '../../../styles';
 
 import { retrieveActiveUser } from '../../../store/UserManager';
 
-const BurgerMenu: FunctionComponent = () => {
+export interface Props {
+    title: string;
+  }
+
+const BurgerMenu: FunctionComponent<Props> = ({title}) => {
+    console.log(title);
 
     const nav = useNavigation();
     const route = useRoute();
@@ -91,15 +96,15 @@ const BurgerMenu: FunctionComponent = () => {
                 <TouchableOpacity activeOpacity={1} onPress={() => nav.goBack()}>
                     <Image style={styles.tinyIcon} source={require('../../../assets/icons/return.png')}/>
                 </TouchableOpacity>
-                <Text style={{marginLeft: 30}}>{route.name}</Text>
+                <Text style={{marginLeft: 30}}>{title}</Text>
                 <View style={isActive ? styles.buttonActive : styles.buttonUnactive}>
                     <TouchableOpacity activeOpacity={1} onPress={() => setActive(!isActive)}>
                         <Image style={styles.tinyIcon} source={require('../../../assets/icons/menu.png')}/>
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={isActive ? styles.blur : styles.unactive}>
                 <View style={isActive ? styles.active : styles.unactive}>
+                    <TouchableOpacity style={isActive ? styles.blur : styles.unactive} onPress={() => setActive(false)}>
                     <View style={genericStyles.rowBetween}>
                         <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Home')}>
                             <Text style={styles.text}>Home</Text>
@@ -134,7 +139,7 @@ const BurgerMenu: FunctionComponent = () => {
                             </View>
                             )}
                     </View>
-                </View>
+                </TouchableOpacity>
             </View>
         </View>
     );
