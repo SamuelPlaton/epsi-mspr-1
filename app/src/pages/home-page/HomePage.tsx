@@ -1,6 +1,6 @@
   
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Button, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import { Button, ScrollView, Text, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Api from '../../api/Api';

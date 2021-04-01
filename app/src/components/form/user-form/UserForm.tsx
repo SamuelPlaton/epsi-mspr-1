@@ -29,14 +29,11 @@ const UserForm: FunctionComponent<Props> = ({ activeUser, onSubmit }) => {
     };
     const data =  await Api.UsersApi.modify(activeUser.id, newData);
 
-    console.log(data);
     // Stop here if -1 is returned
     if (typeof data === 'number') {
-      console.log('error');
       return;
     }
 
-    console.log('on passe');
     const newUser: User = {
       ...activeUser,
       attributes: {
@@ -46,7 +43,6 @@ const UserForm: FunctionComponent<Props> = ({ activeUser, onSubmit }) => {
         lastName: lastName,
       }
     }
-    console.log(newUser);
     await storeActiveUser(newUser);
     onSubmit(newUser);
   }
