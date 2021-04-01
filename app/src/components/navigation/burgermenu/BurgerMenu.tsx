@@ -58,6 +58,7 @@ const BurgerMenu: FunctionComponent<Props> = ({title}) => {
         },
         active: {
             position: "absolute",
+            right: 0,
             width: "40%",
             height: "100%",
             backgroundColor: 'white',
@@ -103,8 +104,8 @@ const BurgerMenu: FunctionComponent<Props> = ({title}) => {
                     </TouchableOpacity>
                 </View>
             </View>
+            <TouchableOpacity style={isActive ? styles.blur : styles.unactive} onPress={() => setActive(false)}>
                 <View style={isActive ? styles.active : styles.unactive}>
-                    <TouchableOpacity style={isActive ? styles.blur : styles.unactive} onPress={() => setActive(false)}>
                     <View style={genericStyles.rowBetween}>
                         <TouchableOpacity activeOpacity={1} onPress={() => nav.navigate('Home')}>
                             <Text style={styles.text}>Home</Text>
@@ -137,10 +138,10 @@ const BurgerMenu: FunctionComponent<Props> = ({title}) => {
                                     <Text style={styles.text}>S'enregister</Text>
                                 </TouchableOpacity> 
                             </View>
-                            )}
+                        )}
                     </View>
-                </TouchableOpacity>
-            </View>
+                </View>
+            </TouchableOpacity>
         </View>
     );
 };
