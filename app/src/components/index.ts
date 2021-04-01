@@ -4,4 +4,3 @@ export * from './detail';
 export * from './info';
 export * from './form';
 export * from './list';
-export * from './navigation';
