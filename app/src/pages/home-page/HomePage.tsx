@@ -1,6 +1,6 @@
   
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Button, ScrollView, Text, View } from 'react-native';
+import { Button, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Api from '../../api/Api';
@@ -32,7 +32,6 @@ const HomePage: FunctionComponent = () => {
   const [activeUser, setActiveUser] = useState<User | undefined>(route.params ? (route.params as User) : undefined);
 
   const getData = async () => {
-    // await AsyncStorage.removeItem('activeUser'); // Disconnect
 
     if (!activeUser) {
       retrieveActiveUser().then((response) => {
@@ -62,6 +61,11 @@ const HomePage: FunctionComponent = () => {
     getData();
   }, [activeUser]);
 
+  const disconnect = async () => {
+    await AsyncStorage.removeItem('activeUser'); // Disconnect
+    setActiveUser(undefined);
+  };
+
   return (
     <ScrollView>
       {activeUser ? (
@@ -69,7 +73,6 @@ const HomePage: FunctionComponent = () => {
           <Text style={{ ...genericStyles.marginXAuto, ...genericStyles.subtitleText }}>
             Salut {activeUser.attributes.firstName} !
           </Text>
-          <Button title='Temp Profile' onPress={() => nav.navigate('User')}/>
           <View style={{ ...genericStyles.rowBetween, ...genericStyles.center }}>
             <LinkCard text='Scanner' icon={Images.qrCode} link='Scan' />
             <LinkCard text='Mes coupons' icon={Images.heart} link='Coupons' />
@@ -77,6 +80,10 @@ const HomePage: FunctionComponent = () => {
           <View style={{ ...genericStyles.rowBetween, ...genericStyles.center }}>
             <LinkCard text='Etablissements' icon={Images.googleMaps} link='Map' />
             <LinkCard text='Commander' icon={Images.globe} link='https://google.com' />
+          </View>
+          <View style={{ ...genericStyles.rowBetween, ...genericStyles.center }}>
+            <LinkCard text='Mon profil' icon={Images.defaultProfilPic} link='User' />
+            <LinkCard text='Déconnecter' icon={Images.logout} onClick={disconnect} />
           </View>
           {coupons && coupons.length > 0 ? (
             <View>

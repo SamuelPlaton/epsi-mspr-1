@@ -12,7 +12,7 @@ import { ModifyUserData } from "../../../api/users/UsersApi";
 
 export interface Props {
   activeUser: User;
-  onSubmit: () => void;
+  onSubmit: (user: User) => void;
 }
 
 const UserForm: FunctionComponent<Props> = ({ activeUser, onSubmit }) => {
@@ -29,11 +29,14 @@ const UserForm: FunctionComponent<Props> = ({ activeUser, onSubmit }) => {
     };
     const data =  await Api.UsersApi.modify(activeUser.id, newData);
 
+    console.log(data);
     // Stop here if -1 is returned
     if (typeof data === 'number') {
+      console.log('error');
       return;
     }
 
+    console.log('on passe');
     const newUser: User = {
       ...activeUser,
       attributes: {
@@ -43,8 +46,9 @@ const UserForm: FunctionComponent<Props> = ({ activeUser, onSubmit }) => {
         lastName: lastName,
       }
     }
+    console.log(newUser);
     await storeActiveUser(newUser);
-    onSubmit();
+    onSubmit(newUser);
   }
 
   return (

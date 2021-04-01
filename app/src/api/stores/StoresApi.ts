@@ -9,7 +9,7 @@ const StoresApi = {
 
   list: (ids?: Array<string>) => client.get(ids ? `/stores/selected?ids=${ids.join(',')}` : '/stores').then(response => {
     return response.data.map(store => setStore(store));
-  }).catch(err => handleErrorMessages(err.response.data)),
+  }).catch(err => handleErrorMessages(err?.response?.data)),
 
   put: (userId: string, stores: Array<string>, userToken: string) => client.put('/stores', {data: { userId, stores, userToken }}).then(response => {
     return response;

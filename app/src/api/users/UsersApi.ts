@@ -32,7 +32,7 @@ const UsersApi = {
       stores: response.data.stores.map(s => setStore(s)),
       historiqueCoupons: response.data.historiqueCoupons.map(hc => setHistoriqueCoupon(hc)),
     }
-  }).catch(err => handleErrorMessages(err.response.data)),
+  }).catch(err => handleErrorMessages(err?.response?.data)),
 
   list: (ids: Array<string>) => client.get('/users', {data: ids}).then(response => {
     return response.data.map(user => setUser(user));
