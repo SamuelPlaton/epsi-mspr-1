@@ -5,7 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Api from '../../api/Api';
 import { Coupon, User, UserCoupon } from '../../entities';
-import { CouponList, LinkCard, BurgerMenu } from '../../components';
+import { CouponList, LinkCard } from '../../components';
 import { Images } from '../../images';
 import { genericStyles } from '../../styles';
 import { retrieveActiveUser } from '../../store/UserManager';
@@ -64,7 +64,6 @@ const HomePage: FunctionComponent = () => {
 
   return (
     <ScrollView>
-      <BurgerMenu title="Home"/>
       {activeUser ? (
         <View>
           <Text style={{ ...genericStyles.marginXAuto, ...genericStyles.subtitleText }}>
