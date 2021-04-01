@@ -23,20 +23,23 @@ const UserInfo: FunctionComponent = () => {
   const [activeUser, setActiveUser] = useState<User | undefined>(undefined);
   
   const getData = async () => {
-    retrieveActiveUser().then(response => {
-      setActiveUser(response);
-    })
+    if(!activeUser){
+      retrieveActiveUser().then(response => {
+        setActiveUser(response);
+      })
+    }
 
-    if (!activeUser) return;
+    if (!activeUser) {
+      return;
+    }
 
     const userData = await Api.UsersApi.get(activeUser.id);
     const storeData = await Api.StoresApi.list();
 
     // Stop here if -1 is returned
-    if (typeof userData === 'number') {
+    if (typeof userData === 'number' || typeof storeData === 'number') {
       return;
     }
-
     setStores(storeData);
     setActiveStores(userData.stores);
   }
@@ -79,6 +82,11 @@ const UserInfo: FunctionComponent = () => {
 
   const birthdayDate = moment(activeUser?.attributes.birthday).locale('fr').format('L');
 
+  const handleSubmit = (newUser: User) => {
+    setActiveUser(newUser);
+    setEditable(false);
+  };
+
   return (
     <View>
       {activeUser && (
@@ -91,7 +99,7 @@ const UserInfo: FunctionComponent = () => {
             </View>
             <Image source={Images.defaultProfilPic} style={genericStyles.iconLarge} />
             {editable ? (
-              <UserForm activeUser={activeUser} onSubmit={() => setEditable(false)} />
+              <UserForm activeUser={activeUser} onSubmit={handleSubmit} />
             ) : (
               <View style={{marginBottom: 20}}>
                 <View style={genericStyles.rowStart}>

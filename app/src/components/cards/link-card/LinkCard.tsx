@@ -8,14 +8,15 @@ import {genericStyles} from "../../../styles";
 export interface Props {
   icon: ImageProps;
   text: string;
-  link: string;
+  link?: string;
+  onClick?: () => void;
 }
 
 /**
  * The react coupon link component.
  */
 
-const LinkCard: FunctionComponent<Props> = ({icon, text, link}) => {
+const LinkCard: FunctionComponent<Props> = ({icon, text, link, onClick}) => {
 
   const nav = useNavigation();
 
@@ -38,8 +39,11 @@ const LinkCard: FunctionComponent<Props> = ({icon, text, link}) => {
   });
 
   const redirect = () => {
-
-    nav.navigate(link)
+    if (link){
+      nav.navigate(link);
+    }else if (onClick){
+      onClick();
+    }
   }
 
   return (

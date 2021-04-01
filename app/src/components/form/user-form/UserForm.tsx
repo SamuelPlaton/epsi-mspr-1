@@ -12,7 +12,7 @@ import { ModifyUserData } from "../../../api/users/UsersApi";
 
 export interface Props {
   activeUser: User;
-  onSubmit: () => void;
+  onSubmit: (user: User) => void;
 }
 
 const UserForm: FunctionComponent<Props> = ({ activeUser, onSubmit }) => {
@@ -44,7 +44,7 @@ const UserForm: FunctionComponent<Props> = ({ activeUser, onSubmit }) => {
       }
     }
     await storeActiveUser(newUser);
-    onSubmit();
+    onSubmit(newUser);
   }
 
   return (
